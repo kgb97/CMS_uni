@@ -1,3 +1,4 @@
+import { Payload } from 'payload/dist/payload';
 import { CollectionConfig } from 'payload/types';
 
 const AreasDeConocimiento: CollectionConfig = {
@@ -29,6 +30,14 @@ const AreasDeConocimiento: CollectionConfig = {
       hasMany: true, // muchas carreras por área
     },
   ],
+  hooks: {
+    afterChange: [async ({ req }) => await trainBot(req.payload)],
+    afterDelete: [async ({ req }) => await trainBot(req.payload)],
+  },
 };
 
 export default AreasDeConocimiento;
+function trainBot(payload: Payload): any {
+  throw new Error('Function not implemented.');
+}
+

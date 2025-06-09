@@ -24,6 +24,9 @@ import InvestigacionArea from './collections/InvestigacionArea'
 import Investigaciones from './collections/investigaciones'
 import Posgrado from './collections/posgrado'
 import Recintos from './collections/recintos'
+import Historial from './collections/historial'
+import ChatbotEndpoint from './endpoints/chatbot'
+import { trainBot } from './lib/training'
 
 export default buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL,
@@ -49,8 +52,20 @@ export default buildConfig({
     InvestigacionArea,
     Investigaciones,
     Posgrado,
-    Recintos
+    Recintos,
+    Noticias,
+    Historial,
     ],
+  endpoints: [ChatbotEndpoint],
+  onInit: async (payload) => {
+    try {
+      console.log('🚀 Entrenando chatbot...')
+      await trainBot(payload)
+      console.log('✅ Entrenamiento completado')
+    } catch (err) {
+      console.error('❌ Error al entrenar chatbot:', err)
+    }
+  },
   cors: '*',
   typescript: {
     outputFile: path.resolve(__dirname, 'payload-types.ts'),
