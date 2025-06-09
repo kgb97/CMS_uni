@@ -2,6 +2,9 @@ import { CollectionConfig } from 'payload/types';
 
 const Carreras: CollectionConfig = {
   slug: 'carreras',
+  access: {
+    read: () => true,
+  },
   labels: {
     singular: 'Carrera',
     plural: 'Carreras',

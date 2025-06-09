@@ -2,6 +2,9 @@ import { CollectionConfig } from 'payload/types';
 
 const Estadisticas: CollectionConfig = {
   slug: 'estadisticas',
+  access: {
+    read: () => true,
+  },
   labels: {
     singular: 'Estadística',
     plural: 'Estadísticas',

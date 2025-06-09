@@ -2,6 +2,9 @@ import { CollectionConfig } from 'payload/types';
 
 const AreasDeConocimiento: CollectionConfig = {
   slug: 'areas-de-conocimiento',
+  access: {
+    read: () => true,
+  },
   labels: {
     singular: 'Área de Conocimiento',
     plural: 'Áreas de Conocimiento',

@@ -2,6 +2,9 @@ import { CollectionConfig } from 'payload/types';
 
 const Eventos: CollectionConfig = {
   slug: 'eventos',
+  access: {
+    read: () => true,
+  },
   labels: {
     singular: 'Evento',
     plural: 'Eventos',

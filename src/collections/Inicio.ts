@@ -2,6 +2,9 @@ import { CollectionConfig } from 'payload/types';
 
 const Inicio: CollectionConfig = {
   slug: 'inicio',
+  access: {
+    read: () => true,
+  },
   labels: {
     singular: 'Sección Inicio',
     plural: 'Sección Inicio',
