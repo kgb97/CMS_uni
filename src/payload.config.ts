@@ -53,7 +53,6 @@ export default buildConfig({
     Investigaciones,
     Posgrado,
     Recintos,
-    Noticias,
     Historial,
     ],
   endpoints: [ChatbotEndpoint],
