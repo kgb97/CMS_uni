@@ -24,7 +24,7 @@
  *             properties:
  *               pregunta:
  *                 type: string
- *                 example: ¿Cuáles son los eventos disponibles este mes?
+ *                 example: "¿Cuáles son los eventos disponibles este mes?"
  *     responses:
  *       200:
  *         description: Respuesta generada por el chatbot
@@ -35,7 +35,7 @@
  *               properties:
  *                 respuesta:
  *                   type: string
- *                   example: 📅 Este mes hay dos eventos: Taller de innovación y Feria tecnológica.
+ *                   example: "📅 Este mes hay dos eventos: Taller de innovación y Feria tecnológica."
  *       400:
  *         description: Error al procesar la pregunta (por ejemplo, faltan campos requeridos)
  *         content:
@@ -45,5 +45,6 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: Falta el campo 'pregunta'
+ *                   example: "Falta el campo 'pregunta'"
  */
+export {}

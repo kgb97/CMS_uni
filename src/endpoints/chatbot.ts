@@ -1,3 +1,6 @@
+import { Endpoint } from 'payload/config';
+import { getBestResponse } from '../lib/training';
+
 /**
  * @openapi
  * tags:
@@ -47,10 +50,6 @@
  *                   type: string
  *                   example: Falta el campo 'pregunta'
  */
-
-import { Endpoint } from 'payload/config';
-import { getBestResponse } from '../lib/training';
-
 const ChatbotEndpoint: Endpoint = {
   path: '/chatbot',
   method: 'post',
