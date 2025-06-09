@@ -15,7 +15,15 @@ import DocumentosAccesoRapido from './collections/DocumentosAccesoRapido';
 import Eventos from './collections/Eventos';
 import Multimedia from './collections/Multimedia';
 import NuestrosCanales from './collections/NuestrosCanales';
-import OfertaAcademica from './collections/OfertaAcademica';
+import AreasDeConocimiento from './collections/areasDeConocimiento'
+import Carreras from './collections/carreras'
+import Contactanos from './collections/contactanos'
+import Extension from './collections/Extension'
+import Footer from './collections/footer'
+import InvestigacionArea from './collections/InvestigacionArea'
+import Investigaciones from './collections/investigaciones'
+import Posgrado from './collections/posgrado'
+import Recintos from './collections/recintos'
 
 export default buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL,
@@ -33,7 +41,16 @@ export default buildConfig({
     Eventos,
     Multimedia,
     NuestrosCanales,
-    OfertaAcademica],
+    AreasDeConocimiento,
+    Carreras,
+    Contactanos,
+    Extension,
+    Footer,
+    InvestigacionArea,
+    Investigaciones,
+    Posgrado,
+    Recintos
+    ],
   cors: '*',
   typescript: {
     outputFile: path.resolve(__dirname, 'payload-types.ts'),
