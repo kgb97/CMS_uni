@@ -28,7 +28,7 @@ const Noticias: CollectionConfig = {
       required: true,
     },
     { name: 'descripcionCorta', type: 'textarea', required: true },
-    { name: 'fecha', type: 'date', required: true },
+    { name: 'fecha', type: 'date', required: true,defaultValue: () => new Date() },
     { name: 'descripcionLarga', type: 'richText', required: true },
     { name: 'autor', type: 'text', required: false },
   ],
