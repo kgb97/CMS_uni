@@ -2,6 +2,7 @@ import express from 'express'
 import payload from 'payload'
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
+import { trainBot } from '../services/chatbot';
 
 require('dotenv').config()
 const app = express()
@@ -40,8 +41,10 @@ const start = async () => {
     secret: process.env.PAYLOAD_SECRET,
     express: app,
     onInit: async () => {
-      payload.logger.info(`Payload Admin URL: ${payload.getAdminURL()}`)
+      payload.logger.info(`Payload Admin URL: ${payload.getAdminURL()}`);
+      await trainBot(payload); 
     },
+    
   });
   app.listen(3001, () => {
     payload.logger.info(`Servidor en http://localhost:3001`);

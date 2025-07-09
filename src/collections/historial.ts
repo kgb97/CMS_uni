@@ -7,7 +7,7 @@ const Historial: CollectionConfig = {
   },
   fields: [
     { name: 'pregunta', type: 'text', required: true },
-    { name: 'respuesta', type: 'textarea', required: true },
+    { name: 'respuesta', type: 'text', required: true },
     { name: 'coleccionOrigen', type: 'text' },
     { name: 'documentoId', type: 'text' },
     {
