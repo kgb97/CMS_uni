@@ -30,7 +30,7 @@ const Noticias: CollectionConfig = {
     },
     { name: 'descripcionCorta', type: 'text', required: true },
     { name: 'fecha', type: 'date', required: true,defaultValue: () => new Date() },
-    { name: 'descripcionLarga', type: 'text', required: true },
+    { name: 'descripcionLarga', type: 'richText', required: true },
     { name: 'autor', type: 'text', required: false },
   ],
   hooks: {
