@@ -19,7 +19,7 @@ const Eventos: CollectionConfig = {
     {
       name: 'descripcion',
       label: 'Descripción',
-      type: 'richText',
+      type: 'textarea',
       required: false,
     },
     {

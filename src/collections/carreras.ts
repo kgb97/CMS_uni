@@ -1,4 +1,5 @@
 import { CollectionConfig } from 'payload/types';
+import { trainBot } from '../lib/training'
 
 const Carreras: CollectionConfig = {
   slug: 'carreras',
@@ -19,7 +20,7 @@ const Carreras: CollectionConfig = {
     {
       name: 'descripcion',
       label: 'Descripción',
-      type: 'richText',
+      type: 'textarea',
     },
     {
       name: 'imagenes',
@@ -39,6 +40,10 @@ const Carreras: CollectionConfig = {
       type: 'text',
     },
   ],
+  hooks: {
+      afterChange: [async ({ req }) => await trainBot(req.payload)],
+      afterDelete: [async ({ req }) => await trainBot(req.payload)],
+    },
 };
 
 export default Carreras;

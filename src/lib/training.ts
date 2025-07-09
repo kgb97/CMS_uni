@@ -10,6 +10,10 @@ let knowledgeBase: KnowledgeItem[] = [];
 
 const collectionsToIndex = [
   { slug: 'areas-de-conocimiento', fields: ['nombre', 'descripcion'] },
+  {slug: 'carreras', fields: ['nombre','Descripción']},
+  {slug: 'noticias', fields: ['nombre','descripcionCorta','fecha']},
+  {slug: 'contactanos', fields: ['ubicacion','apartadoPostal','telefonos']},
+  {slug:'nuestros-canales', fields:['nombre','descripcionCorta']}
 ];
 
 export const trainBot = async (payload: any) => {

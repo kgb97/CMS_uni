@@ -1,5 +1,6 @@
 import { Payload } from 'payload/dist/payload';
 import { CollectionConfig } from 'payload/types';
+import { trainBot } from '../lib/training'
 
 const AreasDeConocimiento: CollectionConfig = {
   slug: 'areas-de-conocimiento',
@@ -37,7 +38,4 @@ const AreasDeConocimiento: CollectionConfig = {
 };
 
 export default AreasDeConocimiento;
-function trainBot(payload: Payload): any {
-  throw new Error('Function not implemented.');
-}
 

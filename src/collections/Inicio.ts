@@ -22,7 +22,7 @@ const Inicio: CollectionConfig = {
     {
       name: 'descripcion',
       label: 'Descripción',
-      type: 'richText',
+      type: 'textarea',
       required: false,
     },
     {
