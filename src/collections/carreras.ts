@@ -20,7 +20,7 @@ const Carreras: CollectionConfig = {
     {
       name: 'descripcion',
       label: 'Descripción',
-      type: 'textarea',
+      type: 'text',
     },
     {
       name: 'imagenes',

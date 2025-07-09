@@ -10,7 +10,7 @@ const NuestrosCanales: CollectionConfig = {
   },
   fields: [
     { name: 'nombre', type: 'text', required: true },
-    { name: 'descripcionCorta', type: 'textarea', required: true },
+    { name: 'descripcionCorta', type: 'text', required: true },
     {
       name: 'links',
       type: 'array',

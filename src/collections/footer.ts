@@ -16,7 +16,7 @@ const Footer: CollectionConfig = {
     },
     {
       name: 'descripcion',
-      type: 'textarea',
+      type: 'text',
       required: true,
     },
     {

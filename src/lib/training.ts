@@ -13,7 +13,9 @@ const collectionsToIndex = [
   {slug: 'carreras', fields: ['nombre','Descripción']},
   {slug: 'noticias', fields: ['nombre','descripcionCorta','fecha']},
   {slug: 'contactanos', fields: ['ubicacion','apartadoPostal','telefonos']},
-  {slug:'nuestros-canales', fields:['nombre','descripcionCorta']}
+  {slug:'nuestros-canales', fields:['nombre','descripcionCorta']},
+  {slug:'recintos', fields:['nombre','descripcion','telefonos']}
+
 ];
 
 export const trainBot = async (payload: any) => {
