@@ -2,7 +2,7 @@ import express from 'express'
 import payload from 'payload'
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
-import { trainBot } from '../services/chatbot';
+import { trainBot } from './lib/training';
 
 require('dotenv').config()
 const app = express()
