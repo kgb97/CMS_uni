@@ -1,19 +1,36 @@
-export function extractTextFromRichText(richText: any[]): string {
-  if (!Array.isArray(richText)) return '';
+export function extractTextFromRichText(blocks: any[]): string {
+  if (!Array.isArray(blocks)) return '';
 
-  const extract = (node: any): string => {
+  function extractFromNode(node: any): string {
     if (!node) return '';
-    let text = '';
 
-    if (Array.isArray(node)) {
-      text += node.map(extract).join(' ');
-    } else if (typeof node === 'object') {
-      if (node.text) text += node.text;
-      if (node.children) text += ' ' + extract(node.children);
+    if (typeof node.text === 'string') {
+      return node.text;
     }
 
-    return text.trim();
-  };
+    if (Array.isArray(node.children)) {
+      return node.children.map(extractFromNode).join('');
+    }
 
-  return extract(richText).replace(/\s+/g, ' ').trim();
+    return '';
+  }
+
+  let texto = '';
+
+  blocks.forEach(block => {
+    if (block.type === 'ol') {
+      // Lista ordenada, cada li con texto en children
+      if (Array.isArray(block.children)) {
+        block.children.forEach((liNode: any, index: number) => {
+          const liText = extractFromNode(liNode);
+          texto += `${index + 1}. ${liText}\n`;
+        });
+      }
+    } else {
+      // Otros bloques: solo texto plano de children
+      texto += extractFromNode(block) + '\n\n';
+    }
+  });
+
+  return texto.trim();
 }

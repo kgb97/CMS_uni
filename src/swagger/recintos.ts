@@ -1,24 +1,24 @@
 /**
  * @openapi
  * tags:
- *   - name: Recintos
- *     description: Gestión de recintos universitarios
+ *   - name: Redes Sociales
+ *     description: Gestión de redes sociales institucionales
  */
 
 /**
  * @openapi
- * /api/recintos:
+ * /api/redes-sociales:
  *   get:
  *     tags:
- *       - Recintos
- *     summary: Obtener todos los recintos
+ *       - Redes Sociales
+ *     summary: Obtener todas las redes sociales
  *     responses:
  *       200:
- *         description: Lista de recintos
+ *         description: Lista de redes sociales
  *   post:
  *     tags:
- *       - Recintos
- *     summary: Crear un nuevo recinto
+ *       - Redes Sociales
+ *     summary: Crear una nueva red social
  *     requestBody:
  *       required: true
  *       content:
@@ -27,57 +27,31 @@
  *             type: object
  *             required:
  *               - nombre
+ *               - icono
+ *               - url
  *             properties:
  *               nombre:
  *                 type: string
- *               descripcion:
+ *                 example: Facebook
+ *               icono:
  *                 type: string
- *               telefonos:
- *                 type: array
- *                 items:
- *                   type: object
- *                   properties:
- *                     telefono:
- *                       type: string
- *                       example: '+505 1234 5678'
- *               telefaxes:
- *                 type: array
- *                 items:
- *                   type: object
- *                   properties:
- *                     telefax:
- *                       type: string
- *                       example: '+505 1234 5678'
- *               apartadoPostal:
+ *                 description: ID del archivo subido (media)
+ *                 example: 64f3b8a7e17f9a001b2f8cde
+ *               url:
  *                 type: string
- *               fotos:
- *                 type: array
- *                 items:
- *                   type: object
- *                   required:
- *                     - foto
- *                   properties:
- *                     foto:
- *                       type: string
- *                       description: ID del archivo subido (media)
- *                     alt:
- *                       type: string
- *                       description: Texto alternativo para la imagen
- *                     principal:
- *                       type: boolean
- *                       description: Marca esta foto como principal
+ *                 example: https://facebook.com/usuario
  *     responses:
  *       201:
- *         description: Recinto creado
+ *         description: Red social creada
  */
 
 /**
  * @openapi
- * /api/recintos/{id}:
+ * /api/redes-sociales/{id}:
  *   get:
  *     tags:
- *       - Recintos
- *     summary: Obtener un recinto por ID
+ *       - Redes Sociales
+ *     summary: Obtener una red social por ID
  *     parameters:
  *       - in: path
  *         name: id
@@ -86,11 +60,11 @@
  *           type: string
  *     responses:
  *       200:
- *         description: Recinto encontrado
+ *         description: Red social encontrada
  *   patch:
  *     tags:
- *       - Recintos
- *     summary: Actualizar un recinto
+ *       - Redes Sociales
+ *     summary: Actualizar una red social
  *     parameters:
  *       - in: path
  *         name: id
@@ -106,42 +80,21 @@
  *             properties:
  *               nombre:
  *                 type: string
- *               descripcion:
+ *                 example: Instagram
+ *               icono:
  *                 type: string
- *               telefonos:
- *                 type: array
- *                 items:
- *                   type: object
- *                   properties:
- *                     telefono:
- *                       type: string
- *               telefaxes:
- *                 type: array
- *                 items:
- *                   type: object
- *                   properties:
- *                     telefax:
- *                       type: string
- *               apartadoPostal:
+ *                 description: ID del archivo subido (media)
+ *                 example: 64f3b8a7e17f9a001b2f8cde
+ *               url:
  *                 type: string
- *               fotos:
- *                 type: array
- *                 items:
- *                   type: object
- *                   properties:
- *                     foto:
- *                       type: string
- *                     alt:
- *                       type: string
- *                     principal:
- *                       type: boolean
+ *                 example: https://instagram.com/usuario
  *     responses:
  *       200:
- *         description: Recinto actualizado
+ *         description: Red social actualizada
  *   delete:
  *     tags:
- *       - Recintos
- *     summary: Eliminar un recinto
+ *       - Redes Sociales
+ *     summary: Eliminar una red social
  *     parameters:
  *       - in: path
  *         name: id
@@ -150,5 +103,5 @@
  *           type: string
  *     responses:
  *       204:
- *         description: Recinto eliminado
+ *         description: Red social eliminada
  */

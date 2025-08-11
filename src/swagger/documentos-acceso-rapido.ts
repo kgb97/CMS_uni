@@ -30,6 +30,8 @@
  *                 type: string
  *               archivo:
  *                 type: string
+ *               link:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Documento subido

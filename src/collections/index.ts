@@ -5,7 +5,6 @@ import Estadisticas from '../collections/Estadisticas';
 import DocumentosAccesoRapido from '../collections/DocumentosAccesoRapido';
 import Eventos from '../collections/Eventos';
 import Multimedia from '../collections/Multimedia';
-import NuestrosCanales from '../collections/NuestrosCanales';
 import AreasDeConocimiento from '../collections/areasDeConocimiento'
 import Carreras from '../collections/carreras'
 import Contactanos from '../collections/contactanos'
@@ -15,6 +14,12 @@ import InvestigacionArea from '../collections/InvestigacionArea'
 import Investigaciones from '../collections/investigaciones'
 import Posgrado from '../collections/posgrado'
 import Recintos from '../collections/recintos'
+import Canales from './canales';
+import SubCanales from './subCanales';
+import RedesSociales from './RedesSociales';
+import Cargos from './Organizacion/cargos';
+import OrganizacionUNI from './Organizacion/organizacionUNI';
+import Divisiones from './Organizacion/divisiones';
 
 const collectionsMap = {
   'areas-de-conocimiento': AreasDeConocimiento,
@@ -26,9 +31,13 @@ const collectionsMap = {
   'investigacion-area':InvestigacionArea,
   'investigaciones':Investigaciones,
   'noticias':Noticias,
-  'nuestros-canales':NuestrosCanales,
   'posgrado': Posgrado,
-  'recintos':Recintos
+  'recintos':Recintos,
+  'canales' : Canales,
+  'subCanales' : SubCanales,
+  'cargos' : Cargos,
+  'organizacionUNI' : OrganizacionUNI,
+  'divisiones' : Divisiones
   // ...
 };
 

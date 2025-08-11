@@ -16,6 +16,11 @@ const DocumentosAccesoRapido: CollectionConfig = {
       relationTo: 'media',
       required: true,
     },
+     {
+      name: 'url',
+      type: 'text',
+      required: true,
+    },
   ],
 };
 

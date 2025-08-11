@@ -13,8 +13,9 @@ const collectionsToIndex = [
   { slug: 'carreras', fields: ['nombre','descripcion'] },
   { slug: 'noticias', fields: ['nombre','descripcionCorta','fecha'] },
   { slug: 'contactanos', fields: ['ubicacion','apartadoPostal','telefonos'] },
-  { slug: 'nuestros-canales', fields: ['nombre','descripcionCorta'] },
-  { slug: 'recintos', fields: ['nombre','descripcion','telefonos'] }
+  { slug: 'canales', fields: ['nombre'] },
+  { slug: 'recintos', fields: ['nombre','descripcion','telefonos'] },
+  { slug: 'subCanales', fields: ['nombre','canalPrincipal'] }
 ];
 
 // Extrae texto plano para indexing

@@ -14,7 +14,6 @@ import Estadisticas from './collections/Estadisticas';
 import DocumentosAccesoRapido from './collections/DocumentosAccesoRapido';
 import Eventos from './collections/Eventos';
 import Multimedia from './collections/Multimedia';
-import NuestrosCanales from './collections/NuestrosCanales';
 import AreasDeConocimiento from './collections/areasDeConocimiento'
 import Carreras from './collections/carreras'
 import Contactanos from './collections/contactanos'
@@ -27,6 +26,12 @@ import Recintos from './collections/recintos'
 import Historial from './collections/historial'
 import ChatbotEndpoint from './endpoints/chatbot'
 import { trainBot } from './lib/training'
+import Canales from './collections/canales'
+import SubCanales from './collections/subCanales'
+import RedesSociales from './collections/RedesSociales'
+import Cargos from './collections/Organizacion/cargos'
+import OrganizacionUNI from './collections/Organizacion/organizacionUNI'
+import Divisiones from './collections/Organizacion/divisiones'
 
 export default buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL,
@@ -43,7 +48,8 @@ export default buildConfig({
     DocumentosAccesoRapido,
     Eventos,
     Multimedia,
-    NuestrosCanales,
+    Canales,
+    SubCanales,
     AreasDeConocimiento,
     Carreras,
     Contactanos,
@@ -54,6 +60,10 @@ export default buildConfig({
     Posgrado,
     Recintos,
     Historial,
+    RedesSociales,
+    Cargos,
+    OrganizacionUNI,
+    Divisiones,
     ],
   endpoints: [ChatbotEndpoint],
   onInit: async (payload) => {
