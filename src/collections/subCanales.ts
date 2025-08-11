@@ -1,7 +1,5 @@
 // src/collections/SubCanales.js
-import { Export } from 'devextreme-react/bar-gauge';
 import { CollectionConfig } from 'payload/types';
-import { Canales } from './canales';
 
 export const SubCanales: CollectionConfig = {
   slug: 'subCanales',
