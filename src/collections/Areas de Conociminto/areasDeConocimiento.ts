@@ -1,75 +1,69 @@
 import { CollectionConfig } from 'payload/types';
+import { trainBot } from '../../lib/training'
 import { extractTextFromRichText } from '../../utils/extractTextFromRichText';
 
-export const Cargos: CollectionConfig = {
-  slug: 'cargos',
-  labels: {
-    singular: 'Cargo',
-    plural: 'Cargos',
-  },
+const AreasDeConocimiento: CollectionConfig = {
+  slug: 'areas-de-conocimiento',
   access: {
     read: () => true,
   },
+  labels: {
+    singular: 'Área de Conocimiento',
+    plural: 'Áreas de Conocimiento',
+  },
   fields: [
     {
-      name: 'nombreCargo',
+      name: 'nombre',
+      label: 'Nombre',
       type: 'text',
       required: true,
     },
     {
-      name: 'fotoEncargado',
-      type: 'upload',
-      relationTo: 'media',
-      required: true,
-    },
-    {
-      name: 'nombreEncargado',
-      type: 'text',
-      required: false,
-    },
-    {
-      name: 'correoEncargado',
-      type: 'email',
-      required: false,
-    },
-    {
-      name: 'descripcionCargo',
+      name: 'descripcion',
+      label: 'Descripción',
       type: 'richText',
-      required: true,      
     },
     {
-      name: 'descripcionPlano',
+      name: 'descripcionplano',
+      label: 'Descripción Plano',
       type: 'textarea',
       admin: {
         readOnly: true,
       },
     },
+    {
+      name: 'carrerasRelacionadas',
+      label: 'Carreras Relacionadas',
+      type: 'relationship',
+      relationTo: 'carreras',
+      hasMany: true, // muchas carreras por área
+    },
   ],
   hooks: {
-    afterChange: [
-        async ({ doc, previousDoc, req, operation }) => {
+    afterChange: [async ({ req }) => await trainBot(req.payload),
+      async ({ doc, previousDoc, req, operation }) => {
         try {
             console.log('[afterChange] Hook iniciado para doc ID:', doc.id);
 
             // Verificar que existe el campo richText y que es diferente del anterior
-            if (!doc?.descripcionCargo) {
-                console.log('[afterChange] No existe descripcionCargo, saliendo...');
+            if (!doc?.descripcion) {
+                console.log('[afterChange] No existe descripcion, saliendo...');
                 return doc;
             }
 
             if (
                 previousDoc &&
-                JSON.stringify(previousDoc.descripcionCargo) === JSON.stringify(doc.descripcionCargo)
+                JSON.stringify(previousDoc.descripcion) === JSON.stringify(doc.descripcion)
             ) {
-                console.log('[afterChange] descripcionCargo sin cambios, saliendo...');
+                console.log('[afterChange] descripcion sin cambios, saliendo...');
                 return doc;
             }
 
             // Extraer texto plano
-            console.log('[afterChange] Contenido raw de descripcionCargo:', JSON.stringify(doc.descripcionCargo, null, 2));
-            const textoPlano = extractTextFromRichText(doc.descripcionCargo);
+            console.log('[afterChange] Contenido raw de descripcion:', JSON.stringify(doc.descripcion, null, 2));
+            const textoPlano = extractTextFromRichText(doc.descripcion);
             console.log('[afterChange] Texto plano extraído:', textoPlano);
-           
+          
 
             // Evitar actualizar si ya está igual para no hacer loops
             if (doc.descripcionPlano === textoPlano) {
@@ -93,10 +87,11 @@ export const Cargos: CollectionConfig = {
             console.error('[afterChange] Error en hook:', error);
             return doc;
         }
-        },
+      },
     ],
+    afterDelete: [async ({ req }) => await trainBot(req.payload)],
   },
-
 };
 
-export default Cargos;
+export default AreasDeConocimiento;
+

@@ -6,6 +6,9 @@ export const OrganizacionUNI: CollectionConfig = {
     singular: 'Organización UNI',
     plural: 'Organizaciones UNI',
   },
+  access: {
+    read: () => true,
+  },
   fields: [
     {
       name: 'nombre',

@@ -7,6 +7,9 @@ export const Canales: CollectionConfig = {
     singular: 'Canal',
     plural: 'Canales',
   },
+  access: {
+    read: () => true,
+  },
   fields: [
     {
       name: 'nombre',

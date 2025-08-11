@@ -6,6 +6,9 @@ export const Divisiones: CollectionConfig = {
     singular: 'División',
     plural: 'Divisiones',
   },
+  access: {
+    read: () => true,
+  },
   fields: [
     {
       name: 'nombre',

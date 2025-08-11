@@ -47,7 +47,7 @@ const start = async () => {
     
   });
   app.listen(3001, () => {
-    payload.logger.info(`Servidor en http://localhost:3001`);
+    payload.logger.info(`Servidor en http://localhost:3000`);
     payload.logger.info(`Swagger UI en http://localhost:3001/swagger`);
   });
 

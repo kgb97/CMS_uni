@@ -1,7 +1,7 @@
 import { Endpoint } from 'payload/config';
 import { getBestResponses } from '../lib/training';
 import { extractTextFromRichText } from '../utils/extractTextFromRichText';
-import collectionsMap from '../collections'; // exporta tus configs aquí
+import collectionsMap from '../collections/bot'; // exporta tus configs aquí
 
 const ChatbotEndpoint: Endpoint = {
   path: '/chatbot',
