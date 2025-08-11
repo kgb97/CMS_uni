@@ -38,14 +38,7 @@ const ChatbotEndpoint: Endpoint = {
 
       const relacionesTextoArr: string[] = [];
 
-      function obtenerIdRelacion(fieldValue: any): string | null {
-        if (typeof fieldValue === 'string') return fieldValue;
-        if (fieldValue && typeof fieldValue === 'object') {
-          if ('id' in fieldValue && typeof fieldValue.id === 'string') return fieldValue.id;
-          if ('value' in fieldValue && typeof fieldValue.value === 'string') return fieldValue.value;
-        }
-        return null;
-      }
+      
 
       for (const field of relationshipFields) {
         const fieldName = field.name;
@@ -106,6 +99,14 @@ const ChatbotEndpoint: Endpoint = {
     // Enviar Content-Type adecuado para markdown
     res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
 
+    function obtenerIdRelacion(fieldValue: any): string | null {
+      if (typeof fieldValue === 'string') return fieldValue;
+      if (fieldValue && typeof fieldValue === 'object') {
+        if ('id' in fieldValue && typeof fieldValue.id === 'string') return fieldValue.id;
+        if ('value' in fieldValue && typeof fieldValue.value === 'string') return fieldValue.value;
+      }
+      return null;
+    }
     return res.json({
       response: respuestaFinal,
       collection: results[0].source,
