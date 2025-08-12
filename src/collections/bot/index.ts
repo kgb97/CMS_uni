@@ -20,6 +20,7 @@ import RedesSociales from '../RedesSociales';
 import Cargos from '../Organizacion/cargos';
 import OrganizacionUNI from '../Organizacion/organizacionUNI';
 import Divisiones from '../Organizacion/divisiones';
+import CalendarioAcademico from '../CalendarioAcademico';
 
 const collectionsMap = {
   'areas-de-conocimiento': AreasDeConocimiento,
@@ -37,7 +38,10 @@ const collectionsMap = {
   'subCanales' : SubCanales,
   'cargos' : Cargos,
   'organizacionUNI' : OrganizacionUNI,
-  'divisiones' : Divisiones
+  'divisiones' : Divisiones,
+  'redes-sociales': RedesSociales,
+  'calendario-academico': CalendarioAcademico,
+  'footer': Footer,
   // ...
 };
 

@@ -32,6 +32,7 @@ import RedesSociales from './collections/RedesSociales'
 import Cargos from './collections/Organizacion/cargos'
 import OrganizacionUNI from './collections/Organizacion/organizacionUNI'
 import Divisiones from './collections/Organizacion/divisiones'
+import CalendarioAcademico from './collections/CalendarioAcademico'
 
 export default buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL,
@@ -64,6 +65,7 @@ export default buildConfig({
     Cargos,
     OrganizacionUNI,
     Divisiones,
+    CalendarioAcademico,
     ],
   endpoints: [ChatbotEndpoint],
   onInit: async (payload) => {

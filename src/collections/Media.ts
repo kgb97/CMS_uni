@@ -9,7 +9,7 @@ const Media: CollectionConfig = {
   upload: {
     staticDir: 'media',
     staticURL: '/media',
-    mimeTypes: ['image/*', 'video/*'],
+    mimeTypes: ['image/*', 'video/*', 'application/pdf'],
   },
   admin: {
     useAsTitle: 'filename',
