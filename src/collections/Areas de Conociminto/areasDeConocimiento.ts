@@ -35,7 +35,7 @@ const AreasDeConocimiento: CollectionConfig = {
       name: 'carrerasRelacionadas',
       label: 'Carreras Relacionadas',
       type: 'relationship',
-      relationTo: 'carreras',
+      relationTo: 'carrera',
       hasMany: true, // muchas carreras por área
     },
   ],

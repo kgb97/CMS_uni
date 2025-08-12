@@ -10,7 +10,7 @@ let knowledgeBase: KnowledgeItem[] = [];
 
 const collectionsToIndex = [
   { slug: 'areas-de-conocimiento', fields: ['nombre', 'descripcion','carrerasRelacionadas'] },
-  { slug: 'carreras', fields: ['nombre','descripcion'] },
+  { slug: 'carrera', fields: ['nombre','descripcion'] },
   { slug: 'noticias', fields: ['nombre','descripcionCorta','fecha'] },
   { slug: 'contactanos', fields: ['ubicacion','apartadoPostal','telefonos'] },
   { slug: 'canales', fields: ['nombre'] },

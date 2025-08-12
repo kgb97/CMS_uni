@@ -7,6 +7,9 @@ export const RedesSociales: CollectionConfig = {
     singular: 'Red Social',
     plural: 'Redes Sociales',
   },
+  access: {
+  read: () => true,
+  },
   fields: [
     {
       name: 'nombre',
