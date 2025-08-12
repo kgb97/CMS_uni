@@ -11,7 +11,6 @@ import Noticias from './collections/Noticias'
 import Media from './collections/Media' 
 import Inicio from './collections/Inicio';
 import Estadisticas from './collections/Estadisticas';
-import DocumentosAccesoRapido from './collections/DocumentosAccesoRapido';
 import Eventos from './collections/Eventos';
 import Multimedia from './collections/Multimedia';
 import AreasDeConocimiento from './collections/Areas de Conociminto/areasDeConocimiento'
@@ -32,7 +31,8 @@ import RedesSociales from './collections/RedesSociales'
 import Cargos from './collections/Organizacion/cargos'
 import OrganizacionUNI from './collections/Organizacion/organizacionUNI'
 import Divisiones from './collections/Organizacion/divisiones'
-import CalendarioAcademico from './collections/CalendarioAcademico'
+import CalendarioAcademico from './collections/Acceso Rapido/CalendarioAcademico'
+import Comunicados from './collections/Acceso Rapido/comunicados'
 
 export default buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL,
@@ -46,7 +46,6 @@ export default buildConfig({
     Noticias, 
     Media,Inicio,
     Estadisticas,
-    DocumentosAccesoRapido,
     Eventos,
     Multimedia,
     Canales,
@@ -66,6 +65,7 @@ export default buildConfig({
     OrganizacionUNI,
     Divisiones,
     CalendarioAcademico,
+    Comunicados,
     ],
   endpoints: [ChatbotEndpoint],
   onInit: async (payload) => {

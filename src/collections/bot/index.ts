@@ -2,7 +2,6 @@ import Noticias from '../Noticias'
 import Media from '../Media' 
 import Inicio from '../Inicio';
 import Estadisticas from '../Estadisticas';
-import DocumentosAccesoRapido from '../DocumentosAccesoRapido';
 import Eventos from '../Eventos';
 import Multimedia from '../Multimedia';
 import AreasDeConocimiento from '../Areas de Conociminto/areasDeConocimiento'
@@ -20,7 +19,7 @@ import RedesSociales from '../RedesSociales';
 import Cargos from '../Organizacion/cargos';
 import OrganizacionUNI from '../Organizacion/organizacionUNI';
 import Divisiones from '../Organizacion/divisiones';
-import CalendarioAcademico from '../CalendarioAcademico';
+import CalendarioAcademico from '../Acceso Rapido/CalendarioAcademico';
 
 const collectionsMap = {
   'areas-de-conocimiento': AreasDeConocimiento,
