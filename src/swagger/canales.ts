@@ -34,26 +34,14 @@
  *                 example: Canal UNI Noticias
  *               icono:
  *                 type: string
- *                 example: https://example.com/icono-canal.png
- *               subCanales:
+ *                 description: ID del archivo en la colección "media"
+ *                 example: 64f3a2c6b92f23001a2d4567
+ *               sub_Canales:
  *                 type: array
- *                 description: Lista de subcanales asociados
+ *                 description: IDs de subcanales asociados
  *                 items:
- *                   type: object
- *                   required:
- *                     - nombre
- *                     - icono
- *                     - url
- *                   properties:
- *                     nombre:
- *                       type: string
- *                       example: UNI TV
- *                     icono:
- *                       type: string
- *                       example: https://example.com/icono-subcanal.png
- *                     url:
- *                       type: string
- *                       example: https://example.com/uni-tv
+ *                   type: string
+ *                   example: 64f3a2c6b92f23001a2d4568
  *     responses:
  *       201:
  *         description: Canal creado correctamente
@@ -96,17 +84,11 @@
  *                 type: string
  *               icono:
  *                 type: string
- *               subCanales:
+ *                 description: ID del archivo en "media"
+ *               sub_Canales:
  *                 type: array
  *                 items:
- *                   type: object
- *                   properties:
- *                     nombre:
- *                       type: string
- *                     icono:
- *                       type: string
- *                     url:
- *                       type: string
+ *                   type: string
  *     responses:
  *       200:
  *         description: Canal actualizado correctamente

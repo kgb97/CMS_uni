@@ -27,12 +27,6 @@ export const SubCanales: CollectionConfig = {
       type: 'text',
       required: true,
     },
-    {
-      name: 'canalPrincipal',
-      type: 'relationship',
-      relationTo: 'canales',
-      required: true,
-    },
   ],
 };
 

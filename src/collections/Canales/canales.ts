@@ -22,6 +22,13 @@ export const Canales: CollectionConfig = {
       relationTo: 'media',
       required: true,
     },
+    {
+      name: 'sub_Canales',
+      label: 'Sub Canales',
+      type: 'relationship',
+      relationTo: 'subCanales',
+      hasMany: true,
+    },
   ],
 };
 
