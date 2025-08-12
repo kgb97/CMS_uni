@@ -19,7 +19,7 @@ const Estadisticas: CollectionConfig = {
     {
       name: 'valor',
       label: 'Valor',
-      type: 'number',
+      type: 'text',
       required: true,
     },
   ],

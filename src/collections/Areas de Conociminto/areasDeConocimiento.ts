@@ -73,7 +73,7 @@ const AreasDeConocimiento: CollectionConfig = {
 
             // Actualizar campo descripcionPlano con overrideAccess
             await req.payload.update({
-            collection: 'cargos',
+            collection: 'areas-de-conocimiento',
             id: doc.id,
             data: {
                 descripcionPlano: textoPlano,
