@@ -155,51 +155,111 @@ const ChatbotEndpoint: Endpoint = {
         .replace(/\s{2,}/g, ' ')
         .trim();
 
-      // Expandir allResults para incluir carreras relacionadas cuando aplique
-      const allResultsExpanded: Array<{ collection: string; documentId: string; nombre?: string }> = [];
+            // Interfaz para el resultado expandido
+      interface ExpandedResult {
+        collection: string;
+        documentId: string;
+        nombre?: string;
+        titulo?: string;
+        [key: string]: any;
+      }
+
+      // Mapeo de colecciones a sus campos de relación
+      type RelationMap = {
+        [collection: string]: Array<{
+          field: string;
+          targetCollection: string;
+        }>;
+      };
+
+      const relationFieldsMap: RelationMap = {
+        'areas-de-conocimiento': [
+          { field: 'carrerasRelacionadas', targetCollection: 'carrera' }
+          // Agregar más relaciones si es necesario
+        ]
+        // Agregar más colecciones con sus relaciones
+      };
+      
+      const allResultsExpanded: ExpandedResult[] = [];
       
       for (const result of results) {
-        // Asegurarse de que el ID sea string
-        allResultsExpanded.push({ 
-          collection: result.source, 
-          documentId: String(result.id) 
-        });
+        // Agregar el documento principal
+        const mainDoc: ExpandedResult = {
+          collection: result.source,
+          documentId: String(result.id)
+        };
+
+        // Obtener el documento completo para acceder a todos sus campos
+        try {
+          const fullDoc = await req.payload.findByID({
+            collection: result.source,
+            id: String(result.id),
+            depth: 1
+          });
+
+          // Agregar campos comunes si existen
+          if (fullDoc) {
+            if ('titulo' in fullDoc && fullDoc.titulo) {
+              mainDoc.titulo = String(fullDoc.titulo);
+            }
+            if ('nombre' in fullDoc && fullDoc.nombre) {
+              mainDoc.nombre = String(fullDoc.nombre);
+            }
+          }
+        } catch (error) {
+          console.warn(`Error al cargar documento ${result.source} ${result.id}:`, error);
+        }
+
+        allResultsExpanded.push(mainDoc);
         
-        if (result.source === 'areas-de-conocimiento') {
+        // Procesar relaciones si existen para esta colección
+        const relations = relationFieldsMap[result.source];
+        if (relations) {
           try {
-            const area = await req.payload.findByID({ 
-              collection: 'areas-de-conocimiento', 
+            const doc = await req.payload.findByID({ 
+              collection: result.source, 
               id: String(result.id), 
               depth: 1 
             });
             
-            if (area?.carrerasRelacionadas && Array.isArray(area.carrerasRelacionadas)) {
-              const carreraIds = area.carrerasRelacionadas
-                .map(obtenerIdRelacion)
-                .filter((id): id is string => Boolean(id));
-                
-              for (const carreraId of carreraIds) {
-                try {
-                  const carrera = await req.payload.findByID({ 
-                    collection: 'carrera', 
-                    id: String(carreraId), 
-                    depth: 0 
-                  });
+            for (const rel of relations) {
+              const relationField = doc?.[rel.field];
+              if (Array.isArray(relationField)) {
+                const relatedIds = relationField
+                  .map((item: any) => obtenerIdRelacion(item))
+                  .filter((id): id is string => Boolean(id));
                   
-                  if (carrera) {
-                    allResultsExpanded.push({ 
-                      collection: 'carrera', 
-                      documentId: String(carrera.id), 
-                      nombre: carrera.nombre || 'Sin nombre' 
+                for (const relatedId of relatedIds) {
+                  try {
+                    const relatedDoc = await req.payload.findByID({ 
+                      collection: rel.targetCollection, 
+                      id: String(relatedId), 
+                      depth: 0 
                     });
+                    
+                    if (relatedDoc) {
+                      const relatedResult: ExpandedResult = {
+                        collection: rel.targetCollection,
+                        documentId: String(relatedDoc.id)
+                      };
+
+                      if ('titulo' in relatedDoc && relatedDoc.titulo) {
+                        relatedResult.titulo = String(relatedDoc.titulo);
+                      }
+                      if ('nombre' in relatedDoc && relatedDoc.nombre) {
+                        relatedResult.nombre = String(relatedDoc.nombre);
+                      }
+
+                      allResultsExpanded.push(relatedResult);
+                    }
+                  } catch (error) {
+                    console.warn(`Error al cargar ${rel.targetCollection} ${relatedId}:`, error);
                   }
-                } catch (error) {
-                  console.warn(`Error al cargar carrera ${carreraId}:`, error);
                 }
               }
             }
           } catch (error) {
-            console.warn(`Error al expandir área de conocimiento ${result.id}:`, error);
+            console.warn(`Error al expandir relaciones de ${result.source} ${result.id}:`, error);
           }
         }
       }
