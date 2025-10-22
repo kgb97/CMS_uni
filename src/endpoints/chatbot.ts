@@ -157,32 +157,57 @@ const ChatbotEndpoint: Endpoint = {
 
       // Expandir allResults para incluir carreras relacionadas cuando aplique
       const allResultsExpanded: Array<{ collection: string; documentId: string; nombre?: string }> = [];
+      
       for (const result of results) {
-        allResultsExpanded.push({ collection: result.source, documentId: result.id });
+        // Asegurarse de que el ID sea string
+        allResultsExpanded.push({ 
+          collection: result.source, 
+          documentId: String(result.id) 
+        });
+        
         if (result.source === 'areas-de-conocimiento') {
           try {
-            const area = await req.payload.findByID({ collection: 'areas-de-conocimiento', id: result.id, depth: 1 });
+            const area = await req.payload.findByID({ 
+              collection: 'areas-de-conocimiento', 
+              id: String(result.id), 
+              depth: 1 
+            });
+            
             if (area?.carrerasRelacionadas && Array.isArray(area.carrerasRelacionadas)) {
               const carreraIds = area.carrerasRelacionadas
                 .map(obtenerIdRelacion)
-                .filter((id): id is string => !!id);
+                .filter((id): id is string => Boolean(id));
+                
               for (const carreraId of carreraIds) {
                 try {
-                  const carrera = await req.payload.findByID({ collection: 'carrera', id: carreraId, depth: 0 });
+                  const carrera = await req.payload.findByID({ 
+                    collection: 'carrera', 
+                    id: String(carreraId), 
+                    depth: 0 
+                  });
+                  
                   if (carrera) {
-                    allResultsExpanded.push({ collection: 'carrera', documentId: carrera.id, nombre: carrera.nombre || 'Sin nombre' });
+                    allResultsExpanded.push({ 
+                      collection: 'carrera', 
+                      documentId: String(carrera.id), 
+                      nombre: carrera.nombre || 'Sin nombre' 
+                    });
                   }
-                } catch {}
+                } catch (error) {
+                  console.warn(`Error al cargar carrera ${carreraId}:`, error);
+                }
               }
             }
-          } catch {}
+          } catch (error) {
+            console.warn(`Error al expandir área de conocimiento ${result.id}:`, error);
+          }
         }
       }
 
       return res.json({
         response: respuestaCompacta,
         collection: results[0].source,
-        documentId: results[0].id,
+        documentId: String(results[0].id), // Aseguramos que sea string
         allResults: allResultsExpanded,
       });
     } catch (error) {
