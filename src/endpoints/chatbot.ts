@@ -3,6 +3,7 @@ import { getBestResponses } from '../lib/training';
 import { extractTextFromRichText } from '../utils/extractTextFromRichText';
 import collectionsMap from '../collections/bot';
 import { ChatbotRequestSchema } from '../validators/chatbot';
+import { marked } from 'marked';
 
 // Función auxiliar para obtener ID de relaciones
 const obtenerIdRelacion = (fieldValue: any): string | null => {
@@ -82,12 +83,35 @@ const ChatbotEndpoint: Endpoint = {
                 )
               );
 
-              const nombres = relacionados
-                .filter((rel): rel is any => !!rel)
-                .map(rel => rel.nombre || rel.title || 'Sin nombre');
+              const relacionadosFiltrados = relacionados.filter((rel): rel is any => !!rel);
 
-              // Markdown para listas
-              relacionesTextoArr.push(`**${field.label}:**\n${nombres.map(n => `- ${n}`).join('\n')}`);
+              // Si son carreras relacionadas, mostrar con más detalle (nombre + descripción)
+              if (relatedCollection === 'carrera' && relacionadosFiltrados.length > 0) {
+                const carrerasDetalle = relacionadosFiltrados.map(carrera => {
+                  let detalle = `- **${carrera.nombre || 'Sin nombre'}**`;
+
+                  if (carrera.descripcion) {
+                    let desc = '';
+                    if (Array.isArray(carrera.descripcion) && carrera.descripcion.length > 0) {
+                      desc = extractTextFromRichText(carrera.descripcion);
+                    } else if (typeof carrera.descripcion === 'string') {
+                      desc = carrera.descripcion;
+                    }
+                    if (desc) {
+                      const descCorta = desc.length > 150 ? desc.substring(0, 150) + '...' : desc;
+                      detalle += `\n  ${descCorta}`;
+                    }
+                  }
+
+                  return detalle;
+                });
+
+                relacionesTextoArr.push(`**${field.label}:**\n${carrerasDetalle.join('\n\n')}`);
+              } else {
+                // Para otras relaciones, mostrar solo nombres
+                const nombres = relacionadosFiltrados.map(rel => rel.nombre || rel.title || 'Sin nombre');
+                relacionesTextoArr.push(`**${field.label}:**\n${nombres.map(n => `- ${n}`).join('\n')}`);
+              }
             }
           } else {
             const id = obtenerIdRelacion(fieldValue);
@@ -118,16 +142,48 @@ const ChatbotEndpoint: Endpoint = {
         );
       }
 
-      const respuestaFinal = respuestasArr.join('\n\n---\n\n');
+      // Unir todas las secciones sin separadores para una respuesta continua
+      const respuestaFinal = respuestasArr.join('\n\n');
 
-      // Enviar Content-Type adecuado para markdown
-      res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+      // Convertir Markdown a HTML y compactar (sin saltos de línea)
+      const respuestaHTML = await marked(respuestaFinal);
+      const respuestaCompacta = (typeof respuestaHTML === 'string'
+        ? respuestaHTML
+        : String(respuestaHTML)
+      )
+        .replace(/[\r\n]+/g, '')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
+
+      // Expandir allResults para incluir carreras relacionadas cuando aplique
+      const allResultsExpanded: Array<{ collection: string; documentId: string; nombre?: string }> = [];
+      for (const result of results) {
+        allResultsExpanded.push({ collection: result.source, documentId: result.id });
+        if (result.source === 'areas-de-conocimiento') {
+          try {
+            const area = await req.payload.findByID({ collection: 'areas-de-conocimiento', id: result.id, depth: 1 });
+            if (area?.carrerasRelacionadas && Array.isArray(area.carrerasRelacionadas)) {
+              const carreraIds = area.carrerasRelacionadas
+                .map(obtenerIdRelacion)
+                .filter((id): id is string => !!id);
+              for (const carreraId of carreraIds) {
+                try {
+                  const carrera = await req.payload.findByID({ collection: 'carrera', id: carreraId, depth: 0 });
+                  if (carrera) {
+                    allResultsExpanded.push({ collection: 'carrera', documentId: carrera.id, nombre: carrera.nombre || 'Sin nombre' });
+                  }
+                } catch {}
+              }
+            }
+          } catch {}
+        }
+      }
 
       return res.json({
-        response: respuestaFinal,
+        response: respuestaCompacta,
         collection: results[0].source,
         documentId: results[0].id,
-        allResults: results.map(r => ({ collection: r.source, documentId: r.id })),
+        allResults: allResultsExpanded,
       });
     } catch (error) {
       console.error('❌ Error en endpoint del chatbot:', error);

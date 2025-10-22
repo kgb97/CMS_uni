@@ -51,6 +51,9 @@ COPY --from=builder /app/package.json ./package.json
 # Copy media directory if it exists
 COPY --from=builder /app/src/media ./src/media
 
+# Copy swagger source files for runtime documentation generation
+COPY --from=builder /app/src/swagger ./src/swagger
+
 USER payload
 
 EXPOSE 3000

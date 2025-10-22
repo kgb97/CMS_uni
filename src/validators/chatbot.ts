@@ -19,6 +19,7 @@ export const ChatbotResponseSchema = z.object({
   allResults: z.array(z.object({
     collection: z.string(),
     documentId: z.string(),
+    nombre: z.string().optional(), // Nombre del documento (ej: nombre de carrera)
   })).optional(),
 });
 

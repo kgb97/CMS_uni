@@ -53,13 +53,11 @@
  *               properties:
  *                 response:
  *                   type: string
- *                   description: Respuesta en formato Markdown con la información encontrada
+ *                   description: Respuesta en formato HTML con la información encontrada
  *                   example: |
- *                     ### 🔎 Ingeniería de Sistemas
- *                     
- *                     La carrera de Ingeniería de Sistemas forma profesionales capacitados...
- *                     
- *                     **Área de Conocimiento:** Ingeniería y Tecnología
+ *                     <h3>🔎 Ingeniería de Sistemas</h3>
+ *                     <p>La carrera de Ingeniería de Sistemas forma profesionales capacitados...</p>
+ *                     <p><strong>Área de Conocimiento:</strong> Ingeniería y Tecnología</p>
  *                 collection:
  *                   type: string
  *                   description: Slug de la colección principal de donde proviene la respuesta
@@ -70,7 +68,7 @@
  *                   example: "507f1f77bcf86cd799439011"
  *                 allResults:
  *                   type: array
- *                   description: Lista de todos los documentos relevantes encontrados
+ *                   description: Lista de todos los documentos relevantes encontrados (incluye carreras relacionadas si el resultado es un área de conocimiento)
  *                   items:
  *                     type: object
  *                     properties:
@@ -80,6 +78,10 @@
  *                       documentId:
  *                         type: string
  *                         example: "507f1f77bcf86cd799439012"
+ *                       nombre:
+ *                         type: string
+ *                         description: Nombre del documento (opcional, incluido para carreras)
+ *                         example: "Ingeniería de Sistemas"
  *       400:
  *         description: Error de validación - Mensaje vacío o inválido
  *         content:

@@ -2,6 +2,7 @@ import express from 'express'
 import payload from 'payload'
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
+import path from 'path';
 import { trainBot } from './lib/training';
 
 require('dotenv').config()
@@ -15,13 +16,13 @@ const swaggerOptions = {
       title: 'API UNI WEB',
       version: '1.0.0',
     },
-    // servers: [
-    //   {
-    //     url: process.env.PAYLOAD_PUBLIC_SERVER_URL,
-    //   },
-    // ],
   },
-  apis: ['./src/swagger/**/*.ts'], // puedes cambiar esto para documentar rutas
+  // Resolver rutas para dev y prod
+  apis: [
+    path.join(process.cwd(), 'src', 'swagger', '**', '*.ts'), // dev
+    path.join(__dirname, 'swagger', '**', '*.js'),             // por si se transpila
+    path.join(__dirname, '..', 'src', 'swagger', '**', '*.ts') // prod con src copiado
+  ],
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
