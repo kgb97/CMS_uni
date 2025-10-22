@@ -4,20 +4,21 @@ import { extractTextFromRichText } from '../utils/extractTextFromRichText';
 import collectionsMap from '../collections/bot';
 import { ChatbotRequestSchema } from '../validators/chatbot';
 
+// Función auxiliar para obtener ID de relaciones
+const obtenerIdRelacion = (fieldValue: any): string | null => {
+  if (typeof fieldValue === 'string') return fieldValue;
+  if (fieldValue && typeof fieldValue === 'object') {
+    if ('id' in fieldValue && typeof fieldValue.id === 'string') return fieldValue.id;
+    if ('value' in fieldValue && typeof fieldValue.value === 'string') return fieldValue.value;
+  }
+  return null;
+};
+
 const ChatbotEndpoint: Endpoint = {
   path: '/chatbot',
   method: 'post',
   handler: async (req, res) => {
     try {
-      // Función auxiliar para obtener ID de relaciones
-      function obtenerIdRelacion(fieldValue: any): string | null {
-        if (typeof fieldValue === 'string') return fieldValue;
-        if (fieldValue && typeof fieldValue === 'object') {
-          if ('id' in fieldValue && typeof fieldValue.id === 'string') return fieldValue.id;
-          if ('value' in fieldValue && typeof fieldValue.value === 'string') return fieldValue.value;
-        }
-        return null;
-      }
 
       // Validar el request con Zod
       const validation = ChatbotRequestSchema.safeParse(req.body);
