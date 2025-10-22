@@ -13,13 +13,13 @@ import Inicio from './collections/Inicio';
 import Estadisticas from './collections/Estadisticas';
 import Eventos from './collections/Eventos';
 import Multimedia from './collections/Multimedia';
-import AreasDeConocimiento from './collections/Areas de Conociminto/areasDeConocimiento'
-import Carreras from './collections/Areas de Conociminto/carreras'
+import AreasDeConocimiento from './collections/Areas de Conocimiento/areasDeConocimiento'
+import Carreras from './collections/Areas de Conocimiento/carreras'
 import Contactanos from './collections/contactanos'
 import Extension from './collections/Extension'
 import Footer from './collections/footer'
-import InvestigacionArea from './collections/Invstigaciones/InvestigacionArea'
-import Investigaciones from './collections/Invstigaciones/investigaciones'
+import InvestigacionArea from './collections/Investigaciones/InvestigacionArea'
+import Investigaciones from './collections/Investigaciones/investigaciones'
 import Posgrado from './collections/posgrado'
 import Recintos from './collections/recintos'
 import Historial from './collections/bot/historial'

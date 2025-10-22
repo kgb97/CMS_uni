@@ -42,18 +42,17 @@ const start = async () => {
     express: app,
     onInit: async () => {
       payload.logger.info(`Payload Admin URL: ${payload.getAdminURL()}`);
-      await trainBot(payload); 
+      // trainBot ya se ejecuta en payload.config.ts, no duplicar aquí
     },
-    
-  });
-  app.listen(3001, () => {
-    payload.logger.info(`Servidor en http://localhost:3000`);
-    payload.logger.info(`Swagger UI en http://localhost:3001/swagger`);
   });
 
   // Add your own express routes here
-
-  app.listen(3000)
+  
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    payload.logger.info(`Servidor en http://localhost:${PORT}`);
+    payload.logger.info(`Swagger UI en http://localhost:${PORT}/swagger`);
+  });
 }
 
 start()
