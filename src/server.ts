@@ -41,6 +41,9 @@ const swaggerOptions = {
       { name: 'GraphQL', description: 'Endpoint GraphQL' },
     ],
   },
+  apis: process.env.NODE_ENV === 'production' 
+    ? ['./dist/swagger/*.js', './dist/chatbot/*.js']
+    : ['./src/swagger/*.ts', './src/chatbot/*.ts'],
 }
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions)
