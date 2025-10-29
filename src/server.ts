@@ -56,7 +56,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, {
 app.get('/', (_, res) => {
   res.redirect('/admin')
 })
-{{ ... }}
+
 const start = async () => {
   // Initialize Payload
   await payload.init({
