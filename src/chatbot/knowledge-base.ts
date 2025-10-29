@@ -15,14 +15,14 @@ const CACHE_DURATION = 1000 * 60 * 30; // 30 minutos
 
 // Colecciones a indexar (solo las más relevantes para el chatbot)
 const COLLECTIONS_TO_INDEX = [
-  { slug: 'noticias', fields: ['nombre', 'descripcionCorta'], titleField: 'nombre' },
-  { slug: 'eventos', fields: ['nombre', 'descripcion', 'ubicacion'], titleField: 'nombre' },
-  { slug: 'areas-de-conocimiento', fields: ['nombre'], titleField: 'nombre' },
-  { slug: 'carrera', fields: ['nombre'], titleField: 'nombre' },
-  { slug: 'recintos', fields: ['nombre', 'descripcion'], titleField: 'nombre' },
-  { slug: 'contactanos', fields: ['ubicacion', 'localidad'], titleField: 'ubicacion' },
-  { slug: 'posgrado', fields: ['nombre'], titleField: 'nombre' },
-  { slug: 'investigaciones', fields: ['nombre'], titleField: 'nombre' },
+  { slug: 'noticias', fields: ['nombre', 'descripcionCorta', 'autor', 'descripcionLarga'], titleField: 'nombre' },
+  { slug: 'eventos', fields: ['nombre', 'descripcion', 'ubicacion', 'fechaInicio', 'fechaFin'], titleField: 'nombre' },
+  { slug: 'areas-de-conocimiento', fields: ['nombre', 'descripcion'], titleField: 'nombre' },
+  { slug: 'carrera', fields: ['nombre', 'descripcion', 'urlPerfilAcademico'], titleField: 'nombre' },
+  { slug: 'recintos', fields: ['nombre', 'descripcion', 'direccion', 'ubicacion'], titleField: 'nombre' },
+  { slug: 'contactanos', fields: ['ubicacion', 'localidad', 'telefono', 'email'], titleField: 'ubicacion' },
+  { slug: 'posgrado', fields: ['nombre', 'descripcion', 'duracion'], titleField: 'nombre' },
+  { slug: 'investigaciones', fields: ['nombre', 'descripcion', 'objetivos'], titleField: 'nombre' },
 ];
 
 /**
@@ -67,23 +67,24 @@ export async function indexKnowledge(payload: Payload, force: boolean = false): 
     try {
       const result = await payload.find({
         collection: config.slug,
-        limit: 50, // Limitar para reducir memoria
+        limit: 100, // Aumentado para capturar más documentos
         depth: 0, // Sin relaciones para ahorrar
       });
 
       for (const doc of result.docs) {
         const contentParts = config.fields.map(field => extractText(doc[field])).filter(Boolean);
-        const content = contentParts.join(' ').substring(0, 500); // Max 500 chars por doc
+        const content = contentParts.join(' ').substring(0, 1000); // Aumentado a 1000 chars por doc
 
         if (content.trim()) {
           newCache.push({
-            id: doc.id,
+            id: String(doc.id),
             collection: config.slug,
-            title: doc[config.titleField] || 'Sin título',
+            title: extractText(doc[config.titleField]) || 'Sin título',
             content: content.trim(),
             metadata: {
               createdAt: doc.createdAt,
               updatedAt: doc.updatedAt,
+              fullTitle: extractText(doc[config.titleField]), // Guardar título completo
             },
           });
         }
@@ -113,12 +114,17 @@ export function searchKnowledge(query: string, limit: number = 5): KnowledgeItem
 
   // Detectar si busca por colección específica
   const collectionKeywords: Record<string, string[]> = {
-    'carrera': ['carrera', 'carreras', 'ingeniería', 'ingenieria', 'programa', 'estudiar'],
-    'eventos': ['evento', 'eventos', 'actividad', 'actividades'],
-    'noticias': ['noticia', 'noticias', 'novedad', 'novedades'],
-    'recintos': ['recinto', 'recintos', 'campus', 'sede', 'sedes', 'ubicación', 'ubicacion'],
-    'areas-de-conocimiento': ['facultad', 'facultades', 'área', 'area', 'departamento'],
-    'contactanos': ['contacto', 'teléfono', 'telefono', 'dirección', 'direccion', 'email'],
+    'carrera': [
+      'carrera', 'carreras', 'ingeniería', 'ingenieria', 'programa', 'estudiar',
+      'civil', 'sistemas', 'eléctrica', 'electrica', 'mecánica', 'mecanica',
+      'industrial', 'química', 'quimica', 'arquitectura', 'agrícola', 'agricola',
+      'telecomunicaciones', 'electrónica', 'electronica', 'computación', 'computacion'
+    ],
+    'eventos': ['evento', 'eventos', 'actividad', 'actividades', 'feria', 'conferencia'],
+    'noticias': ['noticia', 'noticias', 'novedad', 'novedades', 'anuncio', 'comunicado'],
+    'recintos': ['recinto', 'recintos', 'campus', 'sede', 'sedes', 'ubicación', 'ubicacion', 'dónde', 'donde'],
+    'areas-de-conocimiento': ['facultad', 'facultades', 'área', 'area', 'departamento', 'áreas', 'areas'],
+    'contactanos': ['contacto', 'teléfono', 'telefono', 'dirección', 'direccion', 'email', 'correo'],
   };
 
   let targetCollection: string | null = null;
@@ -145,24 +151,41 @@ export function searchKnowledge(query: string, limit: number = 5): KnowledgeItem
     
     let score = 0;
     
-    // Coincidencia exacta en título vale más
-    if (titleLower.includes(queryLower)) score += 10;
+    // Coincidencia exacta en título vale mucho más
+    if (titleLower.includes(queryLower)) score += 20;
     
-    // Coincidencia de palabras clave
+    // Coincidencia de palabras clave en título
     keywords.forEach(keyword => {
-      if (titleLower.includes(keyword)) score += 3;
-      if (contentLower.includes(keyword)) score += 1;
+      if (titleLower.includes(keyword)) score += 5;
+      if (contentLower.includes(keyword)) score += 2;
+    });
+    
+    // Búsqueda por palabras individuales (más flexible)
+    const queryWords = queryLower.split(' ').filter(w => w.length > 2);
+    queryWords.forEach(word => {
+      if (titleLower.includes(word)) score += 3;
+      if (contentLower.includes(word)) score += 1;
+    });
+    
+    // Bonus si coincide con el inicio del título
+    if (titleLower.startsWith(queryLower)) score += 15;
+    keywords.forEach(keyword => {
+      if (titleLower.startsWith(keyword)) score += 10;
     });
 
     return { item, score };
   });
 
   // Filtrar y ordenar por relevancia
-  return scored
+  const results = scored
     .filter(s => s.score > 0)
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)
     .map(s => s.item);
+    
+  console.log(`[Chatbot] Búsqueda "${query}" encontró ${results.length} resultados`);
+  
+  return results;
 }
 
 /**
