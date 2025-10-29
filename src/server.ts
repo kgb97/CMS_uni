@@ -6,6 +6,12 @@ import swaggerJsdoc from 'swagger-jsdoc'
 require('dotenv').config()
 const app = express()
 
+// Determinar la URL base del servidor
+const PORT = process.env.PORT || 3000;
+const BASE_URL = process.env.RAILWAY_STATIC_URL 
+  ? `https://${process.env.RAILWAY_STATIC_URL}`
+  : process.env.PAYLOAD_PUBLIC_SERVER_URL || `http://localhost:${PORT}`;
+
 // Configuración de Swagger
 const swaggerOptions = {
   definition: {
@@ -21,8 +27,8 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000',
-        description: 'Servidor de desarrollo',
+        url: BASE_URL,
+        description: process.env.NODE_ENV === 'production' ? 'Servidor de Producción (Railway)' : 'Servidor de Desarrollo',
       },
     ],
     tags: [
@@ -70,20 +76,10 @@ const start = async () => {
     },
   });
 
-  // const PORT = process.env.PORT || 3000;
-  //
-  // app.listen(PORT, () => {
-  //   payload.logger.info(`Servidor corriendo en http://localhost:${PORT}`);
-  //   payload.logger.info(`Documentación API en http://localhost:${PORT}/api-docs`);
-  // });
-
-    const PORT = process.env.PORT || 3000;
-    const BASE_URL = process.env.RAILWAY_STATIC_URL || `http://localhost:${PORT}`;
-
-    app.listen(PORT, () => {
-        payload.logger.info(`Servidor corriendo en ${BASE_URL}`);
-        payload.logger.info(`Documentación API en ${BASE_URL}/api-docs`);
-    });
+  app.listen(PORT, () => {
+    payload.logger.info(`Servidor corriendo en ${BASE_URL}`);
+    payload.logger.info(`Documentación API en ${BASE_URL}/api-docs`);
+  });
 
 }
 
