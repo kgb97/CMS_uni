@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="57fcb652-8ffe-4725-b353-4229965bccd2" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/.env.example" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/endpoints/chatbot.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/endpoints/chatbot.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/openai.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/openai.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/server.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,7 +37,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "yarn",
-    "ts.external.directory.path": "/opt/webstorm/plugins/javascript-plugin/jsLanguageServicesImpl/external",
+    "ts.external.directory.path": "/home/kgb/uni-web/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -57,7 +56,8 @@
       <option name="presentableId" value="Default" />
       <updated>1761102664401</updated>
       <workItem from="1761102671466" duration="7209000" />
-      <workItem from="1761709660350" duration="5263000" />
+      <workItem from="1761709660350" duration="5414000" />
+      <workItem from="1761715100160" duration="542000" />
     </task>
     <servers />
   </component>

@@ -70,12 +70,21 @@ const start = async () => {
     },
   });
 
-  const PORT = process.env.PORT || 3000;
-  
-  app.listen(PORT, () => {
-    payload.logger.info(`Servidor corriendo en http://localhost:${PORT}`);
-    payload.logger.info(`Documentación API en http://localhost:${PORT}/api-docs`);
-  });
+  // const PORT = process.env.PORT || 3000;
+  //
+  // app.listen(PORT, () => {
+  //   payload.logger.info(`Servidor corriendo en http://localhost:${PORT}`);
+  //   payload.logger.info(`Documentación API en http://localhost:${PORT}/api-docs`);
+  // });
+
+    const PORT = process.env.PORT || 3000;
+    const BASE_URL = process.env.RAILWAY_STATIC_URL || `http://localhost:${PORT}`;
+
+    app.listen(PORT, () => {
+        payload.logger.info(`Servidor corriendo en ${BASE_URL}`);
+        payload.logger.info(`Documentación API en ${BASE_URL}/api-docs`);
+    });
+
 }
 
 start()
