@@ -182,6 +182,170 @@
  *                     cacheDuration:
  *                       type: string
  *                       example: "60 minutos"
+ * 
+ * /api/chatbot/questions:
+ *   get:
+ *     tags:
+ *       - Chatbot
+ *     summary: Preguntas frecuentes y sugeridas
+ *     description: |
+ *       Obtiene una lista de preguntas frecuentes organizadas por categorías para ayudar a los usuarios.
+ *       
+ *       **Categorías disponibles:**
+ *       - Carreras y Programas
+ *       - Admisión e Inscripción
+ *       - Campus y Recintos
+ *       - Eventos y Noticias
+ *       - Investigación
+ *       - Contacto y Ayuda
+ *     parameters:
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *         description: Filtrar preguntas por categoría específica
+ *         example: "Carreras y Programas"
+ *     responses:
+ *       200:
+ *         description: Lista de preguntas sugeridas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 total:
+ *                   type: integer
+ *                   description: Total de preguntas disponibles
+ *                   example: 24
+ *                 categories:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       name:
+ *                         type: string
+ *                         example: "Carreras y Programas"
+ *                       icon:
+ *                         type: string
+ *                         example: "🎓"
+ *                       questions:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *                           properties:
+ *                             id:
+ *                               type: string
+ *                               example: "carreras-disponibles"
+ *                             question:
+ *                               type: string
+ *                               example: "¿Qué carreras ofrece la UNI?"
+ *                             category:
+ *                               type: string
+ *                               example: "Carreras y Programas"
+ *                             icon:
+ *                               type: string
+ *                               example: "📚"
+ *             examples:
+ *               allCategories:
+ *                 summary: Todas las categorías
+ *                 value:
+ *                   total: 24
+ *                   categories:
+ *                     - name: "Carreras y Programas"
+ *                       icon: "🎓"
+ *                       questions:
+ *                         - id: "carreras-disponibles"
+ *                           question: "¿Qué carreras ofrece la UNI?"
+ *                           category: "Carreras y Programas"
+ *                           icon: "📚"
+ *                         - id: "ingenieria-sistemas"
+ *                           question: "¿Qué aprendo en Ingeniería de Sistemas?"
+ *                           category: "Carreras y Programas"
+ *                           icon: "💻"
+ *               singleCategory:
+ *                 summary: Una categoría específica
+ *                 value:
+ *                   category: "Eventos y Noticias"
+ *                   icon: "📰"
+ *                   questions:
+ *                     - id: "proximos-eventos"
+ *                       question: "¿Qué eventos próximos hay?"
+ *                       category: "Eventos y Noticias"
+ *                       icon: "🎉"
+ *       404:
+ *         description: Categoría no encontrada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Categoría no encontrada"
+ *                 availableCategories:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   example: ["Carreras y Programas", "Admisión e Inscripción"]
+ * 
+ * /api/chatbot/questions/random:
+ *   get:
+ *     tags:
+ *       - Chatbot
+ *     summary: Pregunta aleatoria
+ *     description: Obtiene una pregunta aleatoria, opcionalmente filtrada por categoría
+ *     parameters:
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *         description: Filtrar por categoría específica
+ *         example: "Investigación"
+ *     responses:
+ *       200:
+ *         description: Pregunta aleatoria
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 question:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: "proyectos-investigacion"
+ *                     question:
+ *                       type: string
+ *                       example: "¿Qué proyectos de investigación tienen?"
+ *                     category:
+ *                       type: string
+ *                       example: "Investigación"
+ *                     icon:
+ *                       type: string
+ *                       example: "🧪"
+ *             examples:
+ *               randomQuestion:
+ *                 summary: Pregunta aleatoria
+ *                 value:
+ *                   question:
+ *                     id: "contacto-general"
+ *                     question: "¿Cómo puedo contactar a la UNI?"
+ *                     category: "Contacto y Ayuda"
+ *                     icon: "📧"
+ *       404:
+ *         description: Categoría no encontrada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                 availableCategories:
+ *                   type: array
+ *                   items:
+ *                     type: string
  */
 
 export {}

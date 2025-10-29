@@ -31,6 +31,7 @@ import Divisiones from './collections/Organizacion/divisiones'
 import CalendarioAcademico from './collections/Acceso Rapido/CalendarioAcademico'
 import Comunicados from './collections/Acceso Rapido/comunicados'
 import ChatbotEndpoint, { ChatbotStatsEndpoint } from './chatbot/endpoint'
+import SuggestedQuestionsEndpoint, { RandomQuestionEndpoint } from './chatbot/suggested-questions'
 import { indexKnowledge } from './chatbot/knowledge-base'
 
 export default buildConfig({
@@ -66,7 +67,12 @@ export default buildConfig({
     CalendarioAcademico,
     Comunicados,
   ],
-  endpoints: [ChatbotEndpoint, ChatbotStatsEndpoint],
+  endpoints: [
+    ChatbotEndpoint, 
+    ChatbotStatsEndpoint, 
+    SuggestedQuestionsEndpoint,
+    RandomQuestionEndpoint,
+  ],
   onInit: async (payload) => {
     // Indexar conocimiento al iniciar
     try {
