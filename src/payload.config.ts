@@ -13,18 +13,15 @@ import Inicio from './collections/Inicio';
 import Estadisticas from './collections/Estadisticas';
 import Eventos from './collections/Eventos';
 import Multimedia from './collections/Multimedia';
-import AreasDeConocimiento from './collections/Areas de Conociminto/areasDeConocimiento'
-import Carreras from './collections/Areas de Conociminto/carreras'
+import AreasDeConocimiento from './collections/Areas de Conocimiento/areasDeConocimiento'
+import Carreras from './collections/Areas de Conocimiento/carreras'
 import Contactanos from './collections/contactanos'
 import Extension from './collections/Extension'
 import Footer from './collections/footer'
-import InvestigacionArea from './collections/Invstigaciones/InvestigacionArea'
-import Investigaciones from './collections/Invstigaciones/investigaciones'
+import InvestigacionArea from './collections/Investigaciones/InvestigacionArea'
+import Investigaciones from './collections/Investigaciones/investigaciones'
 import Posgrado from './collections/posgrado'
 import Recintos from './collections/recintos'
-import Historial from './collections/bot/historial'
-import ChatbotEndpoint from './endpoints/chatbot'
-import { trainBot } from './lib/training'
 import Canales from './collections/Canales/canales'
 import SubCanales from './collections/Canales/subCanales'
 import RedesSociales from './collections/RedesSociales'
@@ -33,6 +30,8 @@ import OrganizacionUNI from './collections/Organizacion/organizacionUNI'
 import Divisiones from './collections/Organizacion/divisiones'
 import CalendarioAcademico from './collections/Acceso Rapido/CalendarioAcademico'
 import Comunicados from './collections/Acceso Rapido/comunicados'
+import ChatbotEndpoint, { ChatbotStatsEndpoint } from './chatbot/endpoint'
+import { indexKnowledge } from './chatbot/knowledge-base'
 
 export default buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL,
@@ -44,7 +43,8 @@ export default buildConfig({
   collections: [
     Users,
     Noticias, 
-    Media,Inicio,
+    Media,
+    Inicio,
     Estadisticas,
     Eventos,
     Multimedia,
@@ -59,22 +59,22 @@ export default buildConfig({
     Investigaciones,
     Posgrado,
     Recintos,
-    Historial,
     RedesSociales,
     Cargos,
     OrganizacionUNI,
     Divisiones,
     CalendarioAcademico,
     Comunicados,
-    ],
-  endpoints: [ChatbotEndpoint],
+  ],
+  endpoints: [ChatbotEndpoint, ChatbotStatsEndpoint],
   onInit: async (payload) => {
+    // Indexar conocimiento al iniciar
     try {
-      console.log('🚀 Entrenando chatbot...')
-      await trainBot(payload)
-      console.log('✅ Entrenamiento completado')
-    } catch (err) {
-      console.error('❌ Error al entrenar chatbot:', err)
+      console.log('[Chatbot] Indexando base de conocimiento...');
+      await indexKnowledge(payload, true);
+      console.log('[Chatbot] Listo para responder preguntas');
+    } catch (error) {
+      console.error('[Chatbot] Error en indexación inicial:', error);
     }
   },
   cors: '*',

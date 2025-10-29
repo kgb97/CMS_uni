@@ -1,5 +1,4 @@
 import { CollectionConfig } from 'payload/types';
-import { trainBot } from '../lib/training'
 
 const Noticias: CollectionConfig = {
   slug: 'noticias',
@@ -33,10 +32,6 @@ const Noticias: CollectionConfig = {
     { name: 'descripcionLarga', type: 'richText', required: true },
     { name: 'autor', type: 'text', required: false },
   ],
-  hooks: {
-    afterChange: [async ({ req }) => await trainBot(req.payload)],
-    afterDelete: [async ({ req }) => await trainBot(req.payload)],
-  },
 };
 
 export default Noticias;

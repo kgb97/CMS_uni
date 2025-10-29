@@ -1,5 +1,4 @@
 import { CollectionConfig } from 'payload/types';
-import { trainBot } from '../lib/training'
 
 const Contactanos: CollectionConfig = {
   slug: 'contactanos',
@@ -61,10 +60,6 @@ const Contactanos: CollectionConfig = {
       ],
     },
   ],
-  hooks: {
-    afterChange: [async ({ req }) => await trainBot(req.payload)],
-    afterDelete: [async ({ req }) => await trainBot(req.payload)],
-  },
 };
 
 export default Contactanos;
