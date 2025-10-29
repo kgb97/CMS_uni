@@ -41,12 +41,12 @@ const swaggerOptions = {
       { name: 'GraphQL', description: 'Endpoint GraphQL' },
     ],
   },
-  apis: ['./src/swagger/**/*.ts'],
 }
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions)
 
 // Ruta Swagger UI
+// @ts-ignore
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, {
   customCss: '.swagger-ui .topbar { display: none }',
   customSiteTitle: 'UniWeb API Documentation',
@@ -56,7 +56,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, {
 app.get('/', (_, res) => {
   res.redirect('/admin')
 })
-
+{{ ... }}
 const start = async () => {
   // Initialize Payload
   await payload.init({
