@@ -1,8 +1,13 @@
 // src/collections/SubCanales.js
 import { CollectionConfig } from 'payload/types';
+import { invalidateKnowledgeCache } from '../../chatbot/knowledge-base';
 
 export const SubCanales: CollectionConfig = {
   slug: 'subCanales',
+  hooks: {
+    afterChange: [() => { invalidateKnowledgeCache(); }],
+    afterDelete: [() => { invalidateKnowledgeCache(); }],
+  },
   labels: {
     singular: 'SubCanal',
     plural: 'SubCanales',

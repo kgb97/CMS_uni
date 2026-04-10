@@ -1,7 +1,12 @@
 import { CollectionConfig } from 'payload/types';
+import { invalidateKnowledgeCache } from '../../chatbot/knowledge-base';
 
 export const OrganizacionUNI: CollectionConfig = {
   slug: 'organizacionUNI',
+  hooks: {
+    afterChange: [() => { invalidateKnowledgeCache(); }],
+    afterDelete: [() => { invalidateKnowledgeCache(); }],
+  },
   labels: {
     singular: 'Organización UNI',
     plural: 'Organizaciones UNI',

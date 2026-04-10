@@ -1,8 +1,13 @@
 // src/collections/Comunicados.ts
 import { CollectionConfig } from 'payload/types';
+import { invalidateKnowledgeCache } from '../../chatbot/knowledge-base';
 
 export const Comunicados: CollectionConfig = {
   slug: 'comunicados',
+  hooks: {
+    afterChange: [() => { invalidateKnowledgeCache(); }],
+    afterDelete: [() => { invalidateKnowledgeCache(); }],
+  },
   labels: {
     singular: 'Comunicado',
     plural: 'Comunicados',

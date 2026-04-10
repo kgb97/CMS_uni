@@ -1,8 +1,13 @@
 // src/collections/RedesSociales.ts
 import { CollectionConfig } from 'payload/types';
+import { invalidateKnowledgeCache } from '../chatbot/knowledge-base';
 
 export const RedesSociales: CollectionConfig = {
   slug: 'redesSociales',
+  hooks: {
+    afterChange: [() => { invalidateKnowledgeCache(); }],
+    afterDelete: [() => { invalidateKnowledgeCache(); }],
+  },
   labels: {
     singular: 'Red Social',
     plural: 'Redes Sociales',

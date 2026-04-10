@@ -1,8 +1,13 @@
 // src/collections/Canales.js
 import { CollectionConfig } from 'payload/types';
+import { invalidateKnowledgeCache } from '../../chatbot/knowledge-base';
 
 export const Canales: CollectionConfig = {
   slug: 'canales',
+  hooks: {
+    afterChange: [() => { invalidateKnowledgeCache(); }],
+    afterDelete: [() => { invalidateKnowledgeCache(); }],
+  },
   labels: {
     singular: 'Canal',
     plural: 'Canales',

@@ -1,7 +1,14 @@
 import { CollectionConfig } from 'payload/types';
+import { invalidateKnowledgeCache } from '../chatbot/knowledge-base';
+
+const chatbotHooks = {
+  afterChange: [() => { invalidateKnowledgeCache(); }],
+  afterDelete: [() => { invalidateKnowledgeCache(); }],
+};
 
 const Noticias: CollectionConfig = {
   slug: 'noticias',
+  hooks: chatbotHooks,
   access: {
     read: () => true,
   },

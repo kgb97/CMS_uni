@@ -1,7 +1,12 @@
 import { CollectionConfig } from 'payload/types';
+import { invalidateKnowledgeCache } from '../../chatbot/knowledge-base';
 
 const Carreras: CollectionConfig = {
   slug: 'carrera',
+  hooks: {
+    afterChange: [() => { invalidateKnowledgeCache(); }],
+    afterDelete: [() => { invalidateKnowledgeCache(); }],
+  },
   access: {
     read: () => true,
   },

@@ -1,10 +1,12 @@
 import { Payload } from 'payload';
+import { generateEmbedding, cosineSimilarity } from './ai-providers';
 
 export interface KnowledgeItem {
   id: string;
   collection: string;
   title: string;
   content: string;
+  embedding?: number[];
   metadata?: Record<string, any>;
 }
 
@@ -13,16 +15,25 @@ let knowledgeCache: KnowledgeItem[] = [];
 let lastIndexTime: number = 0;
 const CACHE_DURATION = 1000 * 60 * 30; // 30 minutos
 
-// Colecciones a indexar (solo las más relevantes para el chatbot)
+// Colecciones a indexar con sus campos relevantes para el chatbot
 const COLLECTIONS_TO_INDEX = [
   { slug: 'noticias', fields: ['nombre', 'descripcionCorta', 'autor', 'descripcionLarga'], titleField: 'nombre' },
-  { slug: 'eventos', fields: ['nombre', 'descripcion', 'ubicacion', 'fechaInicio', 'fechaFin'], titleField: 'nombre' },
+  { slug: 'eventos', fields: ['titulo', 'descripcion', 'lugar', 'fecha', 'hora'], titleField: 'titulo' },
   { slug: 'areas-de-conocimiento', fields: ['nombre', 'descripcion'], titleField: 'nombre' },
   { slug: 'carrera', fields: ['nombre', 'descripcion', 'urlPerfilAcademico'], titleField: 'nombre' },
-  { slug: 'recintos', fields: ['nombre', 'descripcion', 'direccion', 'ubicacion'], titleField: 'nombre' },
-  { slug: 'contactanos', fields: ['ubicacion', 'localidad', 'telefono', 'email'], titleField: 'ubicacion' },
-  { slug: 'posgrado', fields: ['nombre', 'descripcion', 'duracion'], titleField: 'nombre' },
-  { slug: 'investigaciones', fields: ['nombre', 'descripcion', 'objetivos'], titleField: 'nombre' },
+  { slug: 'recintos', fields: ['nombre', 'descripcion', 'telefonos', 'apartadoPostal'], titleField: 'nombre' },
+  { slug: 'contactanos', fields: ['ubicacion', 'localidad', 'telefonos', 'correos', 'apartadoPostal'], titleField: 'ubicacion' },
+  { slug: 'posgrado', fields: ['nombre', 'descripcion', 'enlace'], titleField: 'nombre' },
+  { slug: 'investigaciones', fields: ['nombre', 'descripcion'], titleField: 'nombre' },
+  // Colecciones adicionales
+  { slug: 'comunicados', fields: ['titulo', 'link'], titleField: 'titulo' },
+  { slug: 'extension', fields: ['titulo', 'descripcion', 'programas'], titleField: 'titulo' },
+  { slug: 'organizacionUNI', fields: ['nombre', 'descripcion'], titleField: 'nombre' },
+  { slug: 'divisiones', fields: ['nombre'], titleField: 'nombre' },
+  { slug: 'cargos', fields: ['nombreCargo', 'nombreEncargado', 'correoEncargado', 'descripcionCargo'], titleField: 'nombreCargo' },
+  { slug: 'redesSociales', fields: ['nombre', 'url'], titleField: 'nombre' },
+  { slug: 'canales', fields: ['nombre'], titleField: 'nombre' },
+  { slug: 'subCanales', fields: ['nombre', 'url'], titleField: 'nombre' },
 ];
 
 /**
@@ -65,28 +76,53 @@ export async function indexKnowledge(payload: Payload, force: boolean = false): 
 
   for (const config of COLLECTIONS_TO_INDEX) {
     try {
-      const result = await payload.find({
-        collection: config.slug,
-        limit: 100, // Aumentado para capturar más documentos
-        depth: 0, // Sin relaciones para ahorrar
-      });
+      // Paginar para obtener TODOS los documentos sin límite
+      let page = 1;
+      let hasNextPage = true;
+      const allDocs: any[] = [];
 
-      for (const doc of result.docs) {
+      while (hasNextPage) {
+        const result = await payload.find({
+          collection: config.slug,
+          limit: 100,
+          page,
+          depth: 0,
+        });
+        allDocs.push(...result.docs);
+        hasNextPage = result.hasNextPage ?? false;
+        page++;
+      }
+
+      console.log(`[Chatbot] Indexando ${allDocs.length} docs de ${config.slug}`);
+
+      for (const doc of allDocs) {
         const contentParts = config.fields.map(field => extractText(doc[field])).filter(Boolean);
         const content = contentParts.join(' ').substring(0, 1000); // Aumentado a 1000 chars por doc
 
         if (content.trim()) {
-          newCache.push({
+          const title = extractText(doc[config.titleField]) || 'Sin título';
+          const item: KnowledgeItem = {
             id: String(doc.id),
             collection: config.slug,
-            title: extractText(doc[config.titleField]) || 'Sin título',
+            title,
             content: content.trim(),
             metadata: {
               createdAt: doc.createdAt,
               updatedAt: doc.updatedAt,
-              fullTitle: extractText(doc[config.titleField]), // Guardar título completo
+              fullTitle: title,
             },
-          });
+          };
+
+          // Generar embedding si Ollama está disponible
+          if (process.env.OLLAMA_BASE_URL) {
+            try {
+              item.embedding = await generateEmbedding(`${title} ${content.trim()}`);
+            } catch (e) {
+              console.warn(`[Chatbot] No se pudo generar embedding para "${title}":`, (e as Error).message);
+            }
+          }
+
+          newCache.push(item);
         }
       }
 
@@ -102,9 +138,40 @@ export async function indexKnowledge(payload: Payload, force: boolean = false): 
 }
 
 /**
- * Busca en la base de conocimiento (búsqueda simple por palabras clave)
+ * Busca en la base de conocimiento usando embeddings semánticos si están disponibles,
+ * o keywords como fallback
  */
-export function searchKnowledge(query: string, limit: number = 5): KnowledgeItem[] {
+export async function searchKnowledge(query: string, limit: number = 5): Promise<KnowledgeItem[]> {
+  // Búsqueda semántica con embeddings
+  if (process.env.OLLAMA_BASE_URL && knowledgeCache.some(item => item.embedding)) {
+    try {
+      const queryEmbedding = await generateEmbedding(query);
+      const scored = knowledgeCache
+        .filter(item => item.embedding)
+        .map(item => ({
+          item,
+          score: cosineSimilarity(queryEmbedding, item.embedding!),
+        }))
+        .filter(s => s.score > 0.3) // umbral mínimo de relevancia
+        .sort((a, b) => b.score - a.score)
+        .slice(0, limit)
+        .map(s => s.item);
+
+      console.log(`[Chatbot] Búsqueda semántica "${query}" encontró ${scored.length} resultados`);
+      return scored;
+    } catch (e) {
+      console.warn('[Chatbot] Fallback a búsqueda por keywords:', (e as Error).message);
+    }
+  }
+
+  // Fallback: búsqueda por keywords
+  return searchByKeywords(query, limit);
+}
+
+/**
+ * Búsqueda por palabras clave (fallback cuando no hay embeddings)
+ */
+function searchByKeywords(query: string, limit: number = 5): KnowledgeItem[] {
   if (knowledgeCache.length === 0) {
     return [];
   }
@@ -186,6 +253,22 @@ export function searchKnowledge(query: string, limit: number = 5): KnowledgeItem
   console.log(`[Chatbot] Búsqueda "${query}" encontró ${results.length} resultados`);
   
   return results;
+}
+
+// Referencia al response cache del endpoint para sincronización
+let _responseCacheClearFn: (() => void) | null = null;
+
+export function registerResponseCacheCleanup(fn: () => void): void {
+  _responseCacheClearFn = fn;
+}
+
+/**
+ * Invalida el caché de conocimiento Y el caché de respuestas para forzar re-indexación
+ */
+export function invalidateKnowledgeCache(): void {
+  lastIndexTime = 0;
+  if (_responseCacheClearFn) _responseCacheClearFn();
+  console.log('[Chatbot] Cachés invalidados — se re-indexará en la próxima consulta');
 }
 
 /**
