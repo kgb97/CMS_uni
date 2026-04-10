@@ -4,33 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="57fcb652-8ffe-4725-b353-4229965bccd2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/CMS_uni.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask2agent.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/.env.example" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chatbot/ai-providers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/chatbot/ai-providers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chatbot/endpoint.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/chatbot/endpoint.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chatbot/knowledge-base.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/chatbot/knowledge-base.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/collections/Acceso Rapido/comunicados.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/collections/Acceso Rapido/comunicados.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/collections/Areas de Conocimiento/areasDeConocimiento.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/collections/Areas de Conocimiento/areasDeConocimiento.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/collections/Areas de Conocimiento/carreras.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/collections/Areas de Conocimiento/carreras.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/collections/Canales/canales.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/collections/Canales/canales.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/collections/Canales/subCanales.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/collections/Canales/subCanales.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/collections/Eventos.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/collections/Eventos.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/collections/Extension.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/collections/Extension.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/collections/Investigaciones/investigaciones.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/collections/Investigaciones/investigaciones.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/collections/Noticias.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/collections/Noticias.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/collections/Organizacion/cargos.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/collections/Organizacion/cargos.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/collections/Organizacion/divisiones.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/collections/Organizacion/divisiones.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/collections/Organizacion/organizacionUNI.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/collections/Organizacion/organizacionUNI.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/collections/RedesSociales.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/collections/RedesSociales.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/collections/contactanos.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/collections/contactanos.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/collections/posgrado.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/collections/posgrado.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/collections/recintos.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/collections/recintos.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
-    </list>
+    <list default="true" id="57fcb652-8ffe-4725-b353-4229965bccd2" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -42,7 +16,7 @@
     </persistenceIdMap>
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="70" />
+    <option name="cachedIndexableFilesCount" value="71" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
@@ -60,28 +34,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "javascript.preferred.runtime.type.id": "node",
-    "last_opened_file_path": "D:/UNI/CMS_uni",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "ts.external.directory.path": "D:\\UNI\\CMS_uni\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/UNI/CMS_uni&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\UNI\\CMS_uni\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -101,6 +75,7 @@
       <workItem from="1761715100160" duration="542000" />
       <workItem from="1775841048611" duration="111000" />
       <workItem from="1775841311936" duration="6351000" />
+      <workItem from="1775850254957" duration="296000" />
     </task>
     <servers />
   </component>
