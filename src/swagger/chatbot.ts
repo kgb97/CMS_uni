@@ -9,15 +9,16 @@
  *       Chatbot con IA que responde preguntas sobre la Universidad Nacional de Ingeniería.
  *       
  *       **Características:**
- *       - Respuestas basadas en información real de las colecciones
- *       - Soporte para OpenAI GPT-3.5-turbo y Google Gemini
- *       - Sistema de caché para reducir costos
- *       - Respuestas naturales y amigables
+ *       - Búsqueda semántica con embeddings (nomic-embed-text vía Ollama)
+ *       - Soporte para Ollama (local/red), Google Gemini y OpenAI
+ *       - Historial de conversación multi-turno (hasta 10 mensajes)
+ *       - Caché de respuestas frecuentes (1 hora), invalidado automáticamente al editar la BD
+ *       - Degradación elegante si la IA no está disponible
  *       
- *       **Optimizado para bajo consumo:**
- *       - Caché de respuestas frecuentes (1 hora)
- *       - Límite de 300 tokens por respuesta
- *       - Búsqueda eficiente en memoria
+ *       **Colecciones indexadas (16):**
+ *       noticias, eventos, áreas de conocimiento, carreras, recintos, contáctanos,
+ *       posgrado, investigaciones, comunicados, extensión, organización UNI,
+ *       divisiones, cargos, redes sociales, canales, subcanales
  *     requestBody:
  *       required: true
  *       content:
@@ -35,6 +36,20 @@
  *               message:
  *                 type: string
  *                 description: Alias de 'pregunta'
+ *               history:
+ *                 type: array
+ *                 description: Historial de conversación para contexto multi-turno (máximo 10 mensajes)
+ *                 items:
+ *                   type: object
+ *                   required:
+ *                     - role
+ *                     - content
+ *                   properties:
+ *                     role:
+ *                       type: string
+ *                       enum: [user, assistant]
+ *                     content:
+ *                       type: string
  *           examples:
  *             carrerasExample:
  *               summary: Pregunta sobre carreras
@@ -44,14 +59,23 @@
  *               summary: Pregunta sobre eventos
  *               value:
  *                 pregunta: "¿Qué eventos hay próximamente?"
- *             contactoExample:
- *               summary: Pregunta sobre contacto
+ *             conHistorialExample:
+ *               summary: Pregunta con historial de conversación
  *               value:
- *                 pregunta: "¿Cómo puedo contactar a la universidad?"
- *             recintosExample:
- *               summary: Pregunta sobre recintos
+ *                 pregunta: "¿Y cuánto dura esa carrera?"
+ *                 history:
+ *                   - role: "user"
+ *                     content: "¿Qué carreras ofrece la UNI?"
+ *                   - role: "assistant"
+ *                     content: "La UNI ofrece Ingeniería en Sistemas, Civil, Eléctrica, entre otras."
+ *             autoridadesExample:
+ *               summary: Pregunta sobre autoridades
  *               value:
- *                 pregunta: "¿Dónde están ubicados los campus de la UNI?"
+ *                 pregunta: "¿Quiénes son las autoridades de la UNI?"
+ *             redesExample:
+ *               summary: Pregunta sobre redes sociales
+ *               value:
+ *                 pregunta: "¿Cuáles son las redes sociales de la UNI?"
  *     responses:
  *       200:
  *         description: Respuesta del chatbot
@@ -63,12 +87,11 @@
  *                 response:
  *                   type: string
  *                   description: Respuesta generada por el chatbot
- *                   example: "La UNI ofrece varias carreras de ingeniería como Ingeniería en Sistemas, Ingeniería Civil, Ingeniería Eléctrica, entre otras. Puedes consultar la lista completa en nuestra sección de carreras."
  *                 provider:
  *                   type: string
- *                   enum: [openai, gemini, cache, none]
- *                   description: Proveedor de IA utilizado
- *                   example: "gemini"
+ *                   enum: [ollama, gemini, openai, cache, fallback, none]
+ *                   description: Proveedor utilizado. 'fallback' indica que la IA no estaba disponible pero se encontró información relevante.
+ *                   example: "ollama"
  *                 tokensUsed:
  *                   type: integer
  *                   description: Tokens consumidos (si aplica)
@@ -93,18 +116,15 @@
  *                   example: false
  *             examples:
  *               successResponse:
- *                 summary: Respuesta exitosa
+ *                 summary: Respuesta exitosa con Ollama
  *                 value:
- *                   response: "La UNI ofrece varias carreras de ingeniería como Ingeniería en Sistemas, Ingeniería Civil e Ingeniería Eléctrica. Cada una tiene un perfil académico específico que puedes consultar en nuestro sitio web."
- *                   provider: "gemini"
+ *                   response: "La UNI ofrece Ingeniería en Sistemas, Civil e Ingeniería Eléctrica, entre otras carreras."
+ *                   provider: "ollama"
  *                   tokensUsed: 145
  *                   sources:
  *                     - collection: "carrera"
  *                       id: "64a1b2c3d4e5f6g7h8i9j0k1"
  *                       title: "Ingeniería en Sistemas"
- *                     - collection: "carrera"
- *                       id: "64a1b2c3d4e5f6g7h8i9j0k2"
- *                       title: "Ingeniería Civil"
  *                   fromCache: false
  *               cachedResponse:
  *                 summary: Respuesta desde caché
@@ -113,6 +133,16 @@
  *                   provider: "cache"
  *                   sources: []
  *                   fromCache: true
+ *               fallbackResponse:
+ *                 summary: Degradación elegante (IA no disponible)
+ *                 value:
+ *                   response: "En este momento el asistente inteligente no está disponible, pero encontré información relacionada:\n\n• Ingeniería en Sistemas\n• Ingeniería Civil\n\nPara más detalles, contacta a la UNI directamente."
+ *                   provider: "fallback"
+ *                   sources:
+ *                     - collection: "carrera"
+ *                       id: "64a1b2c3d4e5f6g7h8i9j0k1"
+ *                       title: "Ingeniería en Sistemas"
+ *                   fromCache: false
  *       400:
  *         description: Pregunta inválida
  *         content:
@@ -178,7 +208,8 @@
  *                   properties:
  *                     provider:
  *                       type: string
- *                       example: "gemini"
+ *                       enum: [ollama, gemini, openai]
+ *                       example: "ollama"
  *                     cacheDuration:
  *                       type: string
  *                       example: "60 minutos"

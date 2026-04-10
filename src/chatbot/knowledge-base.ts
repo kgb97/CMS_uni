@@ -188,10 +188,20 @@ function searchByKeywords(query: string, limit: number = 5): KnowledgeItem[] {
       'telecomunicaciones', 'electrónica', 'electronica', 'computación', 'computacion'
     ],
     'eventos': ['evento', 'eventos', 'actividad', 'actividades', 'feria', 'conferencia'],
-    'noticias': ['noticia', 'noticias', 'novedad', 'novedades', 'anuncio', 'comunicado'],
+    'noticias': ['noticia', 'noticias', 'novedad', 'novedades', 'anuncio'],
     'recintos': ['recinto', 'recintos', 'campus', 'sede', 'sedes', 'ubicación', 'ubicacion', 'dónde', 'donde'],
     'areas-de-conocimiento': ['facultad', 'facultades', 'área', 'area', 'departamento', 'áreas', 'areas'],
     'contactanos': ['contacto', 'teléfono', 'telefono', 'dirección', 'direccion', 'email', 'correo'],
+    'comunicados': ['comunicado', 'comunicados', 'anuncio', 'anuncios', 'aviso', 'avisos', 'oficial'],
+    'extension': ['extensión', 'extension', 'programa extensión', 'curso', 'cursos', 'capacitación', 'capacitacion'],
+    'organizacionUNI': ['organización', 'organizacion', 'estructura', 'organigrama', 'administración', 'administracion'],
+    'cargos': ['autoridad', 'autoridades', 'rector', 'decano', 'director', 'cargo', 'cargos', 'encargado', 'funcionario'],
+    'divisiones': ['división', 'division', 'divisiones', 'departamento', 'unidad'],
+    'posgrado': ['posgrado', 'posgrados', 'maestría', 'maestria', 'especialización', 'especializacion', 'doctorado'],
+    'investigaciones': ['investigación', 'investigacion', 'investigaciones', 'proyecto', 'proyectos', 'ciencia', 'tecnología'],
+    'redesSociales': ['redes sociales', 'red social', 'facebook', 'instagram', 'twitter', 'youtube', 'redes'],
+    'canales': ['canal', 'canales', 'medio', 'medios', 'comunicación uni'],
+    'subCanales': ['subcanal', 'subcanales', 'enlace', 'portal', 'plataforma'],
   };
 
   let targetCollection: string | null = null;

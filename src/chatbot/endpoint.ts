@@ -22,7 +22,14 @@ function shouldListAll(query: string): boolean {
     'qué recintos', 'cuáles recintos', 'todos los recintos',
     'qué facultades', 'cuáles facultades', 'todas las facultades',
     'qué áreas', 'cuáles áreas', 'todas las áreas',
-    'listar', 'mostrar todas', 'cuántas',
+    'qué comunicados', 'cuáles comunicados', 'todos los comunicados',
+    'qué programas', 'cuáles programas', 'todos los programas',
+    'qué autoridades', 'quiénes son las autoridades', 'lista de autoridades',
+    'qué posgrados', 'cuáles posgrados', 'todos los posgrados', 'lista de posgrados',
+    'qué investigaciones', 'cuáles investigaciones', 'todas las investigaciones',
+    'qué redes sociales', 'cuáles redes', 'redes sociales de la uni',
+    'qué canales', 'cuáles canales', 'todos los canales',
+    'listar', 'mostrar todas', 'mostrar todos', 'cuántas', 'cuántos',
   ];
   
   const queryLower = query.toLowerCase();
