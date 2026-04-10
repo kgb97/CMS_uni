@@ -126,7 +126,7 @@ export async function indexKnowledge(payload: Payload, force: boolean = false): 
         }
       }
 
-      console.log(`[Chatbot] Indexados ${result.docs.length} docs de ${config.slug}`);
+      console.log(`[Chatbot] Indexados ${allDocs.length} docs de ${config.slug}`);
     } catch (error) {
       console.error(`[Chatbot] Error indexando ${config.slug}:`, error);
     }
