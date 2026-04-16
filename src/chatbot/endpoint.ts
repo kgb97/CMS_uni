@@ -165,6 +165,50 @@ const ChatbotEndpoint: Endpoint = {
         });
       }
 
+      const queryLower = query.toLowerCase().trim();
+      
+      // Detectar preguntas sobre identidad del chatbot
+      const identityKeywords = [
+        'quién eres', 'quien eres', 'qué eres', 'que eres',
+        'cómo te llamas', 'como te llamas', 'tu nombre',
+        'preséntate', 'presentate', 'dime quién eres',
+        'eres un bot', 'eres una ia', 'eres inteligencia artificial'
+      ];
+      
+      const isIdentityQuestion = identityKeywords.some(keyword => queryLower.includes(keyword));
+      
+      if (isIdentityQuestion) {
+        return res.json({
+          response: '¡Hola! 👋\n\nSoy el asistente virtual oficial de la Universidad Nacional de Ingeniería (UNI) de Nicaragua.\n\nMi función es ayudarte a encontrar información sobre:\n\n🎓 Carreras y programas académicos\n📅 Eventos universitarios\n🏛️ Recintos y campus\n📰 Noticias y comunicados\n🔬 Investigaciones y posgrados\n📞 Información de contacto\n\n¿En qué puedo ayudarte hoy?',
+          provider: 'predefined',
+          fromCache: false,
+        });
+      }
+      
+      // Detectar saludos simples
+      const greetings = ['hola', 'buenos días', 'buenas tardes', 'buenas noches', 'saludos', 'hey', 'holi'];
+      const isGreeting = greetings.some(greeting => queryLower === greeting || queryLower === greeting + '!');
+      
+      if (isGreeting) {
+        return res.json({
+          response: '¡Hola! 👋 Bienvenido al asistente virtual de la UNI.\n\n¿En qué puedo ayudarte hoy?\n\nPuedes preguntarme sobre:\n🎓 Carreras\n📅 Eventos\n🏛️ Recintos\n📰 Noticias\n🔬 Investigaciones\n📞 Contacto',
+          provider: 'predefined',
+          fromCache: false,
+        });
+      }
+      
+      // Detectar despedidas
+      const farewells = ['adiós', 'adios', 'chao', 'hasta luego', 'nos vemos', 'gracias', 'bye'];
+      const isFarewell = farewells.some(farewell => queryLower.includes(farewell));
+      
+      if (isFarewell) {
+        return res.json({
+          response: '¡Hasta pronto! 👋\n\nFue un placer ayudarte. Si tienes más preguntas sobre la UNI, no dudes en volver.\n\n¡Que tengas un excelente día! 😊',
+          provider: 'predefined',
+          fromCache: false,
+        });
+      }
+
       // Validar y sanitizar historial
       const conversationHistory: ChatMessage[] = Array.isArray(history)
         ? history

@@ -31,11 +31,50 @@ El chatbot está configurado con **reglas estrictas** para garantizar respuestas
 - ✅ **Validación estricta**: Si la información no está en el contexto, lo indica claramente
 - ✅ **Sin Markdown**: Formato de texto plano optimizado para chat
 - ✅ **Emojis y MAYÚSCULAS**: Para mejorar la legibilidad sin Markdown
+- ✅ **Respuestas predefinidas**: Para preguntas comunes (saludos, identidad, despedidas)
 
 **Ejemplo de respuesta honesta:**
 ```
 No tengo esa información en este momento. Te sugiero contactar directamente a la UNI.
 ```
+
+### 💬 Respuestas Predefinidas
+
+El chatbot tiene respuestas predefinidas para preguntas comunes que **no requieren búsqueda** en las colecciones:
+
+**Preguntas sobre identidad:**
+- "¿Quién eres?"
+- "¿Cómo te llamas?"
+- "Preséntate"
+- "¿Eres un bot?"
+
+**Respuesta:**
+```
+¡Hola! 👋
+
+Soy el asistente virtual oficial de la Universidad Nacional de Ingeniería (UNI) de Nicaragua.
+
+Mi función es ayudarte a encontrar información sobre:
+
+🎓 Carreras y programas académicos
+📅 Eventos universitarios
+🏛️ Recintos y campus
+📰 Noticias y comunicados
+🔬 Investigaciones y posgrados
+📞 Información de contacto
+
+¿En qué puedo ayudarte hoy?
+```
+
+**Saludos simples:**
+- "Hola"
+- "Buenos días"
+- "Buenas tardes"
+
+**Despedidas:**
+- "Adiós"
+- "Gracias"
+- "Hasta luego"
 
 ### 🔄 Proveedores Soportados
 
