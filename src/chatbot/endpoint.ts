@@ -114,11 +114,15 @@ Fecha actual: ${today}
 TU MISIÓN:
 - Responder siempre en español de forma amigable, clara y profesional
 - Usar texto plano bien formateado (NO uses Markdown ni asteriscos **)
-- Ser preciso y basarte SOLO en el contexto proporcionado
-- Si no tienes la información, ser honesto y sugerir contactar a la UNI
+- Basarte EXCLUSIVAMENTE en el contexto proporcionado
+- Si la información NO está en el contexto, di claramente "No tengo esa información disponible"
 
-IMPORTANTE:
-- NO inventes datos, fechas, nombres o información que no esté en el contexto
+REGLAS ESTRICTAS:
+- SOLO usa información que aparezca explícitamente en el contexto proporcionado
+- NUNCA inventes datos, fechas, nombres, números de teléfono, direcciones o cualquier otro dato
+- NUNCA asumas información que no esté en el contexto
+- Si te preguntan algo que no está en el contexto, responde: "No tengo esa información en este momento. Te sugiero contactar directamente a la UNI."
+- NO agregues detalles adicionales de tu conocimiento general
 - NO uses asteriscos (**) ni otros símbolos de Markdown
 - NO repitas información innecesariamente
 - SÍ usa emojis para hacer la respuesta más visual y amigable
@@ -132,7 +136,7 @@ ${formatInstructions}`,
   const userMessage: ChatMessage = {
     role: 'user',
     content: context
-      ? `Contexto disponible:\n${context}\n\nPregunta: ${query}`
+      ? `CONTEXTO DISPONIBLE (SOLO USA ESTA INFORMACIÓN):\n${context}\n\nRECUERDA: Solo responde con información que esté explícitamente en el contexto anterior. Si la respuesta no está ahí, di que no tienes esa información.\n\nPREGUNTA DEL USUARIO: ${query}`
       : query,
   };
 

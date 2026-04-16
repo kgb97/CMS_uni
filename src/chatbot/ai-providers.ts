@@ -120,7 +120,7 @@ async function generateWithOpenAI(messages: ChatMessage[]): Promise<AIResponse> 
       role: m.role,
       content: m.content,
     })),
-    temperature: 0.7,
+    temperature: 0.3, // Temperatura baja para mayor precisión y menos creatividad
     max_tokens: 800, // Suficiente para listar todas las carreras
   });
 
@@ -141,7 +141,7 @@ async function generateWithGemini(messages: ChatMessage[]): Promise<AIResponse> 
     model: 'gemini-2.5-flash',
     generationConfig: {
       maxOutputTokens: 800,
-      temperature: 0.7,
+      temperature: 0.3, // Temperatura baja para mayor precisión y menos creatividad
     },
   });
 
@@ -186,7 +186,7 @@ async function generateWithOllama(messages: ChatMessage[]): Promise<AIResponse> 
   const response = await client.chat.completions.create({
     model,
     messages: messages.map(m => ({ role: m.role, content: m.content })),
-    temperature: 0.7,
+    temperature: 0.3, // Temperatura baja para mayor precisión y menos creatividad
     max_tokens: 800,
   });
 
