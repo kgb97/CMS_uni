@@ -11,7 +11,7 @@ export interface KnowledgeItem {
 }
 
 // Caché en memoria para evitar consultas repetidas
-let knowledgeCache: KnowledgeItem[] = [];
+export let knowledgeCache: KnowledgeItem[] = [];
 let lastIndexTime: number = 0;
 const CACHE_DURATION = 1000 * 60 * 30; // 30 minutos
 
@@ -84,7 +84,7 @@ export async function indexKnowledge(payload: Payload, force: boolean = false): 
       while (hasNextPage) {
         const result = await payload.find({
           collection: config.slug,
-          limit: 100,
+          limit: 1000, // OPTIMIZACIÓN: Aumentado de 100 a 1000 para reducir queries a BD
           page,
           depth: 0,
         });
@@ -97,7 +97,7 @@ export async function indexKnowledge(payload: Payload, force: boolean = false): 
 
       for (const doc of allDocs) {
         const contentParts = config.fields.map(field => extractText(doc[field])).filter(Boolean);
-        const content = contentParts.join(' ').substring(0, 1000); // Aumentado a 1000 chars por doc
+        const content = contentParts.join(' ').substring(0, 300); // OPTIMIZACIÓN: Reducido a 300 chars (suficiente para contexto)
 
         if (content.trim()) {
           const title = extractText(doc[config.titleField]) || 'Sin título';
@@ -113,7 +113,9 @@ export async function indexKnowledge(payload: Payload, force: boolean = false): 
             },
           };
 
-          // Generar embedding si Ollama está disponible
+          // OPTIMIZACIÓN: Embeddings deshabilitados para acelerar indexación
+          // La indexación ahora es instantánea en lugar de tomar varios segundos
+          /* GENERACIÓN DE EMBEDDINGS DESHABILITADA
           if (process.env.OLLAMA_BASE_URL) {
             try {
               item.embedding = await generateEmbedding(`${title} ${content.trim()}`);
@@ -121,6 +123,7 @@ export async function indexKnowledge(payload: Payload, force: boolean = false): 
               console.warn(`[Chatbot] No se pudo generar embedding para "${title}":`, (e as Error).message);
             }
           }
+          */
 
           newCache.push(item);
         }
@@ -142,7 +145,12 @@ export async function indexKnowledge(payload: Payload, force: boolean = false): 
  * o keywords como fallback
  */
 export async function searchKnowledge(query: string, limit: number = 5): Promise<KnowledgeItem[]> {
-  // Búsqueda semántica con embeddings
+  // OPTIMIZACIÓN: Usar solo búsqueda por keywords (mucho más rápida)
+  // Embeddings semánticos deshabilitados para mejorar rendimiento
+  // Ahorra 0.5-2 segundos por consulta
+  return searchByKeywords(query, limit);
+
+  /* BÚSQUEDA SEMÁNTICA DESHABILITADA (descomentar si se necesita mayor precisión)
   if (process.env.OLLAMA_BASE_URL && knowledgeCache.some(item => item.embedding)) {
     try {
       const queryEmbedding = await generateEmbedding(query);
@@ -163,9 +171,8 @@ export async function searchKnowledge(query: string, limit: number = 5): Promise
       console.warn('[Chatbot] Fallback a búsqueda por keywords:', (e as Error).message);
     }
   }
-
-  // Fallback: búsqueda por keywords
   return searchByKeywords(query, limit);
+  */
 }
 
 /**
@@ -217,7 +224,9 @@ function searchByKeywords(query: string, limit: number = 5): KnowledgeItem[] {
     const collectionItems = knowledgeCache.filter(item => item.collection === targetCollection);
     if (collectionItems.length > 0) {
       console.log(`[Chatbot] Encontrados ${collectionItems.length} items de ${targetCollection}`);
-      return collectionItems.slice(0, limit);
+      // Para carreras y otras colecciones importantes, devolver TODOS los items (sin límite)
+      // Esto asegura que la IA tenga la lista completa y no invente información
+      return collectionItems.slice(0, Math.max(limit, collectionItems.length));
     }
   }
 

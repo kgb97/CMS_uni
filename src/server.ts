@@ -2,6 +2,7 @@ import express from 'express'
 import payload from 'payload'
 import swaggerUi from 'swagger-ui-express'
 import swaggerJsdoc from 'swagger-jsdoc'
+import { indexKnowledge } from './chatbot/knowledge-base'
 
 require('dotenv').config()
 const app = express()
@@ -73,6 +74,15 @@ const start = async () => {
     express: app,
     onInit: async () => {
       payload.logger.info(`Payload Admin URL: ${payload.getAdminURL()}`);
+      
+      // OPTIMIZACIÓN: Indexar conocimiento del chatbot en background al iniciar
+      // Esto elimina la latencia de indexación en el primer request
+      payload.logger.info('[Chatbot] Iniciando indexación en background...');
+      indexKnowledge(payload, true).then(() => {
+        payload.logger.info('[Chatbot] Indexación completada y lista para usar');
+      }).catch((error) => {
+        payload.logger.error('[Chatbot] Error en indexación:', error);
+      });
     },
   });
 

@@ -1,10 +1,12 @@
 import { Endpoint } from 'payload/config';
 import { generateChatResponse, ChatMessage } from './ai-providers';
-import { searchKnowledge, indexKnowledge, getCacheStats, registerResponseCacheCleanup } from './knowledge-base';
+import { searchKnowledge, indexKnowledge, getCacheStats, registerResponseCacheCleanup, knowledgeCache } from './knowledge-base';
 
 // Caché de respuestas para preguntas frecuentes (solo sin historial)
 const responseCache = new Map<string, { response: string; timestamp: number }>();
-const RESPONSE_CACHE_DURATION = 1000 * 60 * 60; // 1 hora
+// OPTIMIZACIÓN: Aumentado de 1 hora a 24 horas para más hits de caché
+const RESPONSE_CACHE_DURATION = 1000 * 60 * 60 * 24; // 24 horas
+const MAX_CACHE_SIZE = 500; // Aumentado de 100 a 500
 
 // Sincronizar con knowledge cache: cuando la BD cambia, ambos caches se limpian
 registerResponseCacheCleanup(() => {
@@ -64,6 +66,13 @@ FORMATO PARA LISTADOS:
 - Usa MAYÚSCULAS para títulos de secciones
 - Al final, agrega un llamado a la acción amigable
 
+⚠️ IMPORTANTE PARA LISTAS:
+- SOLO lista los items que aparecen en el CONTEXTO
+- NO agregues items adicionales aunque creas que deberían existir
+- Si solo hay 5 carreras en el contexto, lista SOLO esas 5
+- NO completes la lista con carreras que "probablemente existan"
+- Es mejor una lista corta y precisa que una lista larga con información falsa
+
 EJEMPLO DE FORMATO:
 🎓 CARRERAS DE PREGRADO
 ---
@@ -107,28 +116,16 @@ Lunes a Viernes: 8:00 AM - 5:00 PM
 
   const systemMessage: ChatMessage = {
     role: 'system',
-    content: `Eres el asistente oficial de la Universidad Nacional de Ingeniería (UNI) de Nicaragua.
+    content: `Asistente oficial UNI Nicaragua. Fecha: ${today}
 
-Fecha actual: ${today}
-
-TU MISIÓN:
-- Responder siempre en español de forma amigable, clara y profesional
-- Usar texto plano bien formateado (NO uses Markdown ni asteriscos **)
-- Basarte EXCLUSIVAMENTE en el contexto proporcionado
-- Si la información NO está en el contexto, di claramente "No tengo esa información disponible"
-
-REGLAS ESTRICTAS:
-- SOLO usa información que aparezca explícitamente en el contexto proporcionado
-- NUNCA inventes datos, fechas, nombres, números de teléfono, direcciones o cualquier otro dato
-- NUNCA asumas información que no esté en el contexto
-- Si te preguntan algo que no está en el contexto, responde: "No tengo esa información en este momento. Te sugiero contactar directamente a la UNI."
-- NO agregues detalles adicionales de tu conocimiento general
-- NO uses asteriscos (**) ni otros símbolos de Markdown
-- NO repitas información innecesariamente
-- SÍ usa emojis para hacer la respuesta más visual y amigable
-- SÍ usa MAYÚSCULAS para títulos y énfasis
-- SÍ usa líneas separadoras (---) para dividir secciones
-- SÍ usa saltos de línea para mejorar la legibilidad
+⚠️ REGLAS ESTRICTAS - DEBES SEGUIRLAS AL PIE DE LA LETRA:
+1. SOLO usa información que esté EXPLÍCITAMENTE en el CONTEXTO proporcionado
+2. NUNCA inventes, supongas o agregues información que no esté en el contexto
+3. Si te preguntan por una lista completa, SOLO menciona los items que aparecen en el contexto
+4. Si no está en el contexto, responde: "No tengo esa información en este momento"
+5. NO agregues carreras, eventos, o cualquier dato que no esté listado en el contexto
+6. Formato: texto plano, emojis, MAYÚSCULAS para títulos
+7. NO uses Markdown ni asteriscos
 
 ${formatInstructions}`,
   };
@@ -136,7 +133,7 @@ ${formatInstructions}`,
   const userMessage: ChatMessage = {
     role: 'user',
     content: context
-      ? `CONTEXTO DISPONIBLE (SOLO USA ESTA INFORMACIÓN):\n${context}\n\nRECUERDA: Solo responde con información que esté explícitamente en el contexto anterior. Si la respuesta no está ahí, di que no tienes esa información.\n\nPREGUNTA DEL USUARIO: ${query}`
+      ? `CONTEXTO DISPONIBLE (ESTA ES TODA LA INFORMACIÓN QUE TIENES - NO INVENTES NADA MÁS):\n${context}\n\n⚠️ ADVERTENCIA CRÍTICA: La lista anterior es COMPLETA y EXHAUSTIVA. NO agregues ningún item que no esté listado arriba. Si el usuario pregunta "qué carreras ofrece la UNI", SOLO menciona las carreras que aparecen en el contexto anterior. NO inventes ni supongas carreras adicionales.\n\nPREGUNTA DEL USUARIO: ${query}`
       : query,
   };
 
@@ -233,14 +230,19 @@ const ChatbotEndpoint: Endpoint = {
         }
       }
 
-      // Asegurar que la base de conocimiento esté indexada
-      await indexKnowledge(req.payload);
+      // OPTIMIZACIÓN: La indexación se hace en background al iniciar el servidor
+      // Solo re-indexar si el caché está vacío (por si acaso)
+      if (knowledgeCache.length === 0) {
+        console.log('[Chatbot] Caché vacío, indexando...');
+        await indexKnowledge(req.payload);
+      }
 
       // Detectar si debe listar todo
       const needsFullList = shouldListAll(query);
 
       // Buscar información relevante (más resultados si necesita listar todo)
-      const limit = needsFullList ? 50 : 5;
+      // IMPORTANTE: Para listados completos, obtener TODAS las carreras/items disponibles
+      const limit = needsFullList ? 100 : 3;
       const relevantDocs = await searchKnowledge(query, limit);
 
       let response: string;
@@ -253,7 +255,8 @@ const ChatbotEndpoint: Endpoint = {
         provider = 'none';
       } else {
         // Construir contexto — más chars por item cuando se necesita listar todo
-        const contextLength = needsFullList ? 300 : 200;
+        // OPTIMIZACIÓN: Reducido de 300 a 250 para mejorar velocidad
+        const contextLength = needsFullList ? 250 : 180;
         const context = relevantDocs
           .map((doc, i) => `${i + 1}. ${doc.title}: ${doc.content.substring(0, contextLength)}`)
           .join('\n');
@@ -288,8 +291,8 @@ const ChatbotEndpoint: Endpoint = {
 
           console.log(`[Chatbot] Respuesta cacheada. Tamaño del caché: ${responseCache.size}`);
 
-          // Limpiar caché viejo (mantener solo últimas 100 respuestas)
-          if (responseCache.size > 100) {
+          // Limpiar caché viejo (mantener solo últimas respuestas)
+          if (responseCache.size > MAX_CACHE_SIZE) {
             const oldestKey = responseCache.keys().next().value;
             if (oldestKey) {
               responseCache.delete(oldestKey);
