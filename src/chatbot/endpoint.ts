@@ -57,22 +57,28 @@ function buildPrompt(
 FORMATO PARA LISTADOS:
 - Usa emojis relevantes para cada categoría (🎓 📚 🔬 🏗️ 💻 ⚡ 🏭 🧪 📐 🌱)
 - Agrupa las carreras por área o facultad si hay múltiples
-- Usa numeración clara (1., 2., 3...)
-- Separa secciones con líneas en blanco
+- Usa numeración clara con puntos (1. 2. 3.)
+- Usa líneas de guiones (---) para separar secciones principales
+- Usa líneas en blanco para separar grupos
+- NO uses asteriscos (**) ni formato Markdown
+- Usa MAYÚSCULAS para títulos de secciones
 - Al final, agrega un llamado a la acción amigable
 
 EJEMPLO DE FORMATO:
-🎓 **Carreras de Pregrado**
+🎓 CARRERAS DE PREGRADO
+---
 
-**Ingeniería y Tecnología:**
+INGENIERÍA Y TECNOLOGÍA:
 1. Ingeniería en Sistemas
 2. Ingeniería Civil
 3. Ingeniería Eléctrica
 
-**Arquitectura:**
+ARQUITECTURA:
 1. Arquitectura
 
-📚 **Programas de Posgrado**
+📚 PROGRAMAS DE POSGRADO
+---
+
 1. Maestría en Ingeniería de Software
 2. Maestría en Energías Renovables
 
@@ -80,28 +86,46 @@ EJEMPLO DE FORMATO:
     : `
 FORMATO PARA RESPUESTAS CORTAS:
 - Usa emojis relevantes (📍 📞 📧 🕐 💰 📅)
-- Usa negritas (**texto**) para resaltar información clave
-- Separa información en párrafos cortos
-- Si hay datos específicos (fechas, números, direcciones), resáltalos
-- Termina con una pregunta o sugerencia amigable si es apropiado`;
+- NO uses asteriscos (**) ni formato Markdown
+- Usa MAYÚSCULAS para resaltar títulos o información clave
+- Separa información con saltos de línea
+- Usa guiones (-) para listas simples
+- Si hay datos específicos (fechas, números, direcciones), ponlos en líneas separadas
+- Termina con una pregunta o sugerencia amigable si es apropiado
+
+EJEMPLO DE FORMATO:
+📍 UBICACIÓN:
+Campus Central, Managua
+
+📞 TELÉFONO:
+2278-1234
+
+🕐 HORARIO:
+Lunes a Viernes: 8:00 AM - 5:00 PM
+
+¿Necesitas más información?`;
 
   const systemMessage: ChatMessage = {
     role: 'system',
     content: `Eres el asistente oficial de la Universidad Nacional de Ingeniería (UNI) de Nicaragua.
 
-**Fecha actual:** ${today}
+Fecha actual: ${today}
 
-**Tu misión:**
+TU MISIÓN:
 - Responder siempre en español de forma amigable, clara y profesional
-- Usar formato Markdown para mejorar la legibilidad
+- Usar texto plano bien formateado (NO uses Markdown ni asteriscos **)
 - Ser preciso y basarte SOLO en el contexto proporcionado
 - Si no tienes la información, ser honesto y sugerir contactar a la UNI
 
-**IMPORTANTE:**
+IMPORTANTE:
 - NO inventes datos, fechas, nombres o información que no esté en el contexto
-- NO uses asteriscos simples (*), usa dobles (**) para negritas
+- NO uses asteriscos (**) ni otros símbolos de Markdown
 - NO repitas información innecesariamente
 - SÍ usa emojis para hacer la respuesta más visual y amigable
+- SÍ usa MAYÚSCULAS para títulos y énfasis
+- SÍ usa líneas separadoras (---) para dividir secciones
+- SÍ usa saltos de línea para mejorar la legibilidad
+
 ${formatInstructions}`,
   };
 
@@ -177,7 +201,7 @@ const ChatbotEndpoint: Endpoint = {
 
       if (relevantDocs.length === 0 && !hasHistory) {
         // Sin contexto y sin historial previo
-        response = 'Lo siento, no encontré información específica sobre eso. Puedo ayudarte con:\n\n• 🎓 Carreras y programas académicos\n• 📅 Eventos universitarios\n• 🏛️ Recintos y campus\n• 📰 Noticias y comunicados\n• 🔬 Investigaciones y posgrados\n• 📞 Información de contacto\n\n¿Sobre cuál de estos temas deseas saber?';
+        response = 'Lo siento, no encontré información específica sobre eso. Puedo ayudarte con:\n\n🎓 Carreras y programas académicos\n📅 Eventos universitarios\n🏛️ Recintos y campus\n📰 Noticias y comunicados\n🔬 Investigaciones y posgrados\n📞 Información de contacto\n\n¿Sobre cuál de estos temas deseas saber?';
         provider = 'none';
       } else {
         // Construir contexto — más chars por item cuando se necesita listar todo
@@ -194,9 +218,9 @@ const ChatbotEndpoint: Endpoint = {
         } catch (aiError: any) {
           console.error('[Chatbot] Todos los proveedores de IA fallaron:', aiError.message);
           // Degradación elegante: responder con el contexto encontrado sin IA
-          const fallbackItems = relevantDocs.slice(0, 3).map(d => `• ${d.title}`).join('\n');
+          const fallbackItems = relevantDocs.slice(0, 3).map((d, i) => `${i + 1}. ${d.title}`).join('\n');
           return res.json({
-            response: `En este momento el asistente inteligente no está disponible, pero encontré información relacionada con tu pregunta:\n\n${fallbackItems}\n\nPara más detalles, contacta a la UNI directamente.`,
+            response: `⚠️ En este momento el asistente inteligente no está disponible, pero encontré información relacionada con tu pregunta:\n\n${fallbackItems}\n\nPara más detalles, contacta a la UNI directamente.`,
             provider: 'fallback',
             sources: relevantDocs.map(d => ({ collection: d.collection, id: d.id, title: d.title })),
             fromCache: false,
