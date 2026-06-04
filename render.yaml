@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: cms-uni
+    env: node
+    buildCommand: yarn --frozen-lockfile install && yarn build
+    startCommand: yarn serve
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PAYLOAD_CONFIG_PATH
+        value: dist/payload.config.js
