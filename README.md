@@ -71,7 +71,7 @@ Sistema de gestión de contenidos (CMS) basado en [Payload CMS](https://payloadc
 
 3. **Configurar variables de entorno**
    ```bash
-   cp .env.example .env
+   cp .env .env
    ```
    
    Edita el archivo `.env` con tus configuraciones:
