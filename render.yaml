@@ -2,8 +2,8 @@ services:
   - type: web
     name: cms-uni
     env: node
-    buildCommand: yarn --frozen-lockfile install && yarn build
-    startCommand: yarn serve
+    buildCommand: npm install && npm run build
+    startCommand: npm run serve
     envVars:
       - key: NODE_ENV
         value: production
